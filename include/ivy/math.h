@@ -1,0 +1,45 @@
+#ifndef IVY_MATH_H
+#define IVY_MATH_H
+
+#include "ivy/types.h"
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+typedef struct {
+    int x;
+    int y;
+} IvyPoint;
+
+typedef struct {
+    u32 width;
+    u32 height;
+} IvySize;
+
+typedef struct {
+    float x;
+    float y;
+} IvyVector2;
+
+typedef struct {
+    float m0,  m4,  m8,  m12;
+    float m1,  m5,  m9,  m13;
+    float m2,  m6,  m10, m14;
+    float m3,  m7,  m11, m15;
+} IvyMatrix;
+
+typedef struct {
+    float v[16];
+} IvyFloat16;
+
+IvyMatrix  Ivy_Math_MatrixIdentity(void);
+IvyMatrix  Ivy_Math_MatrixScale(float x, float y, float z);
+IvyMatrix  Ivy_Math_MatrixMultiply(IvyMatrix left, IvyMatrix right);
+IvyFloat16 Ivy_Math_MatrixToFloatV(IvyMatrix mat);
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif

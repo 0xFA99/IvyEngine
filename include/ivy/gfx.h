@@ -1,0 +1,287 @@
+#ifndef IVY_GFX_H
+#define IVY_GFX_H
+
+#include "ivy/types.h"
+#include "ivy/math.h"
+
+#include <stdbool.h>
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+#ifndef IVY_DEFAULT_SHADER_ATTRIB_NAME_POSITION
+    #define IVY_DEFAULT_SHADER_ATTRIB_NAME_POSITION     "vertexPosition"
+#endif
+#ifndef IVY_DEFAULT_SHADER_ATTRIB_NAME_TEXCOORD
+    #define IVY_DEFAULT_SHADER_ATTRIB_NAME_TEXCOORD     "vertexTexCoord"
+#endif
+#ifndef IVY_DEFAULT_SHADER_ATTRIB_NAME_NORMAL
+    #define IVY_DEFAULT_SHADER_ATTRIB_NAME_NORMAL       "vertexNormal"
+#endif
+#ifndef IVY_DEFAULT_SHADER_ATTRIB_NAME_COLOR
+    #define IVY_DEFAULT_SHADER_ATTRIB_NAME_COLOR        "vertexColor"
+#endif
+#ifndef IVY_DEFAULT_SHADER_ATTRIB_NAME_TANGENT
+    #define IVY_DEFAULT_SHADER_ATTRIB_NAME_TANGENT      "vertexTangent"
+#endif
+#ifndef IVY_DEFAULT_SHADER_ATTRIB_NAME_TEXCOORD2
+    #define IVY_DEFAULT_SHADER_ATTRIB_NAME_TEXCOORD2    "vertexTexCoord2"
+#endif
+#ifndef IVY_DEFAULT_SHADER_ATTRIB_NAME_BONEINDICES
+    #define IVY_DEFAULT_SHADER_ATTRIB_NAME_BONEINDICES  "vertexBoneIndices"
+#endif
+#ifndef IVY_DEFAULT_SHADER_ATTRIB_NAME_BONEWEIGHTS
+    #define IVY_DEFAULT_SHADER_ATTRIB_NAME_BONEWEIGHTS  "vertexBoneWeights"
+#endif
+#ifndef IVY_DEFAULT_SHADER_ATTRIB_NAME_INSTANCETRANSFORM
+    #define IVY_DEFAULT_SHADER_ATTRIB_NAME_INSTANCETRANSFORM "instanceTransform"
+#endif
+
+// shader uniform/sampler
+#ifndef IVY_DEFAULT_SHADER_UNIFORM_NAME_MVP
+    #define IVY_DEFAULT_SHADER_UNIFORM_NAME_MVP         "mvp"
+#endif
+#ifndef IVY_DEFAULT_SHADER_UNIFORM_NAME_COLOR
+    #define IVY_DEFAULT_SHADER_UNIFORM_NAME_COLOR       "colDiffuse"
+#endif
+#ifndef IVY_DEFAULT_SHADER_SAMPLER2D_NAME_TEXTURE0
+    #define IVY_DEFAULT_SHADER_SAMPLER2D_NAME_TEXTURE0  "texture0"
+#endif
+
+// shader attribute locations
+#ifndef IVY_DEFAULT_SHADER_ATTRIB_LOCATION_POSITION
+    #define IVY_DEFAULT_SHADER_ATTRIB_LOCATION_POSITION             0
+#endif
+#ifndef IVY_DEFAULT_SHADER_ATTRIB_LOCATION_TEXCOORD
+    #define IVY_DEFAULT_SHADER_ATTRIB_LOCATION_TEXCOORD             1
+#endif
+#ifndef IVY_DEFAULT_SHADER_ATTRIB_LOCATION_NORMAL
+    #define IVY_DEFAULT_SHADER_ATTRIB_LOCATION_NORMAL               2
+#endif
+#ifndef IVY_DEFAULT_SHADER_ATTRIB_LOCATION_COLOR
+    #define IVY_DEFAULT_SHADER_ATTRIB_LOCATION_COLOR                3
+#endif
+#ifndef IVY_DEFAULT_SHADER_ATTRIB_LOCATION_TANGENT
+    #define IVY_DEFAULT_SHADER_ATTRIB_LOCATION_TANGENT              4
+#endif
+#ifndef IVY_DEFAULT_SHADER_ATTRIB_LOCATION_TEXCOORD2
+    #define IVY_DEFAULT_SHADER_ATTRIB_LOCATION_TEXCOORD2            5
+#endif
+#ifndef IVY_DEFAULT_SHADER_ATTRIB_LOCATION_BONEINDICES
+    #define IVY_DEFAULT_SHADER_ATTRIB_LOCATION_BONEINDICES          7
+#endif
+#ifndef IVY_DEFAULT_SHADER_ATTRIB_LOCATION_BONEWEIGHTS
+    #define IVY_DEFAULT_SHADER_ATTRIB_LOCATION_BONEWEIGHTS          8
+#endif
+#ifndef IVY_DEFAULT_SHADER_ATTRIB_LOCATION_INSTANCETRANSFORM
+    #define IVY_DEFAULT_SHADER_ATTRIB_LOCATION_INSTANCETRANSFORM    9
+#endif
+#ifndef IVY_MAX_SHADER_LOCATIONS
+    #define IVY_MAX_SHADER_LOCATIONS                                 32
+#endif
+
+#ifndef IVY_DEFAULT_BATCH_DRAWCALLS
+    #define IVY_DEFAULT_BATCH_DRAWCALLS             256
+#endif
+
+// Misc default defines
+#ifndef IVY_MAX_MATRIX_STACK_SIZE
+    #define IVY_MAX_MATRIX_STACK_SIZE                32
+#endif
+#ifndef IVY_DEFAULT_BATCH_BUFFERS
+    #define IVY_DEFAULT_BATCH_BUFFERS                 1
+#endif
+
+#define IVY_QUADS                                     0x0007
+
+#define IVY_DEFAULT_BATCH_BUFFER_ELEMENTS  8192
+#define IVY_SHADER_LOC_MAP_DIFFUSE         IVY_SHADER_LOC_MAP_ALBEDO
+
+typedef void *(*IvyGLLoadProc)(const char *name);
+
+typedef enum {
+    IVY_VERTEX_POSITION  = 0,
+    IVY_VERTEX_TEXCOORD  = 1,
+    IVY_VERTEX_NORMAL    = 2,
+    IVY_VERTEX_COLOR     = 3,
+    IVY_VERTEX_TANGENT   = 4,
+    IVY_VERTEX_MAX_ATTRIBS,
+} IvyVertexAttrib;
+
+typedef enum {
+    IVY_SHADER_LOC_VERTEX_POSITION = 0,
+    IVY_SHADER_LOC_VERTEX_TEXCOORD01,
+    IVY_SHADER_LOC_VERTEX_TEXCOORD02,
+    IVY_SHADER_LOC_VERTEX_NORMAL,
+    IVY_SHADER_LOC_VERTEX_TANGENT,
+    IVY_SHADER_LOC_VERTEX_COLOR,
+    IVY_SHADER_LOC_MATRIX_MVP,
+    IVY_SHADER_LOC_MATRIX_VIEW,
+    IVY_SHADER_LOC_MATRIX_PROJECTION,
+    IVY_SHADER_LOC_MATRIX_MODEL,
+    IVY_SHADER_LOC_MATRIX_NORMAL,
+    IVY_SHADER_LOC_VECTOR_VIEW,
+    IVY_SHADER_LOC_COLOR_DIFFUSE,
+    IVY_SHADER_LOC_COLOR_SPECULAR,
+    IVY_SHADER_LOC_COLOR_AMBIENT,
+    IVY_SHADER_LOC_MAP_ALBEDO,
+    IVY_SHADER_LOC_MAP_METALNESS,
+    IVY_SHADER_LOC_MAP_NORMAL,
+    IVY_SHADER_LOC_MAP_ROUGHNESS,
+    IVY_SHADER_LOC_MAP_OCCLUSION,
+    IVY_SHADER_LOC_MAP_EMISSION,
+    IVY_SHADER_LOC_MAP_HEIGHT,
+    IVY_SHADER_LOC_MAP_CUBEMAP,
+    IVY_SHADER_LOC_MAP_IRRADIANCE,
+    IVY_SHADER_LOC_MAP_PREFILTER,
+    IVY_SHADER_LOC_MAP_BRDF
+} IvyShaderLocIndex;
+
+typedef enum {
+    IVY_PIXELFORMAT_UNCOMPRESSED_GRAYSCALE = 1,
+    IVY_PIXELFORMAT_UNCOMPRESSED_GRAY_ALPHA,
+    IVY_PIXELFORMAT_UNCOMPRESSED_R5G6B5,
+    IVY_PIXELFORMAT_UNCOMPRESSED_R8G8B8,
+    IVY_PIXELFORMAT_UNCOMPRESSED_R5G5B5A1,
+    IVY_PIXELFORMAT_UNCOMPRESSED_R4G4B4A4,
+    IVY_PIXELFORMAT_UNCOMPRESSED_R8G8B8A8,
+    IVY_PIXELFORMAT_UNCOMPRESSED_R32,
+    IVY_PIXELFORMAT_UNCOMPRESSED_R32G32B32,
+    IVY_PIXELFORMAT_UNCOMPRESSED_R32G32B32A32,
+    IVY_PIXELFORMAT_UNCOMPRESSED_R16,
+    IVY_PIXELFORMAT_UNCOMPRESSED_R16G16B16,
+    IVY_PIXELFORMAT_UNCOMPRESSED_R16G16B16A16,
+    IVY_PIXELFORMAT_COMPRESSED_DXT1_RGB,
+    IVY_PIXELFORMAT_COMPRESSED_DXT1_RGBA,
+    IVY_PIXELFORMAT_COMPRESSED_DXT3_RGBA,
+    IVY_PIXELFORMAT_COMPRESSED_DXT5_RGBA,
+    IVY_PIXELFORMAT_COMPRESSED_ETC1_RGB,
+    IVY_PIXELFORMAT_COMPRESSED_ETC2_RGB,
+    IVY_PIXELFORMAT_COMPRESSED_ETC2_EAC_RGBA,
+    IVY_PIXELFORMAT_COMPRESSED_PVRT_RGB,
+    IVY_PIXELFORMAT_COMPRESSED_PVRT_RGBA,
+    IVY_PIXELFORMAT_COMPRESSED_ASTC_4x4_RGBA,
+    IVY_PIXELFORMAT_COMPRESSED_ASTC_8x8_RGBA
+} IvyPixelFormat;
+
+typedef struct {
+    int mode;
+    int vertexCount;
+    int vertexAlignment;
+    u32 textureId;
+} IvyDrawCall;
+
+typedef struct {
+    int    elementCount;
+    float *vertices;
+    float *texCoords;
+    float *normals;
+    u8    *colors;
+    u32   *indices;
+    u32    vaoId;
+    u32    vboId[IVY_VERTEX_MAX_ATTRIBS];
+} IvyVertexBuffer;
+
+typedef struct {
+    int             bufferCount;
+    int              currentBuffer;
+    IvyVertexBuffer *vertexBuffer;
+    IvyDrawCall     *draws;
+    int drawCounter;
+    float currentDepth;
+} IvyGLRenderBatch;
+
+typedef struct {
+    int vertexCounter;
+    float texcoordx, texcoordy;
+    float normalx, normaly, normalz;
+    unsigned char colorr, colorg, colorb, colora;
+
+    int currentMatrixMode;
+    IvyMatrix *currentMatrix;
+    IvyMatrix modelview;
+    IvyMatrix projection;
+    IvyMatrix transform;
+    // bool transformRequired;
+    IvyMatrix stack[IVY_MAX_MATRIX_STACK_SIZE];
+    // int stackCounter;
+
+    u32 currentTextureId;
+    u32 defaultTextureId;
+    // u32 activeTextureId[IVY_DEFAULT_BATCH_MAX_TEXTURE_UNITS];
+    u32 defaultVShaderId;
+    u32 defaultFShaderId;
+    u32 defaultShaderId;
+    int *defaultShaderLocs;
+    int *currentShaderLocs;
+    u32 currentShaderId;
+
+    // bool stereoRender;
+    // Matrix projectionStereo[2];
+    // Matrix viewOffsetStereo[2];
+
+    // int currentBlendMode;
+    // int glBlendSrcFactor;
+    // int glBlendDstFactor;
+    // int glBlendEquation;
+    // int glBlendSrcFactorRGB;
+    // int glBlendDestFactorRGB;
+    // int glBlendSrcFactorAlpha;
+    // int glBlendDestFactorAlpha;
+    // int glBlendEquationRGB;
+    // int glBlendEquationAlpha;
+    // bool glCustomBlendModeModified;
+
+    int framebufferWidth;
+    int framebufferHeight;
+} IvyGLState;
+
+typedef struct {
+    bool  vao;
+    bool  instancing;
+    bool  texNPOT;
+    bool  texFloat32;
+    bool  texFloat16;
+    bool  texAnisoFilter;
+    bool  texMirrorClamp;
+    bool  texCompASTC;
+    bool  texCompDXT;
+    bool  texCompETC2;
+    float maxAnisotropyLevel;
+} IvyGLExtSupported;
+
+typedef struct {
+    IvyGLRenderBatch *currentBatch;
+    IvyGLRenderBatch  defaultBatch;
+    IvyGLLoadProc     loader;
+    IvyGLState        state;
+    IvyGLExtSupported extSupported;
+} IvyGLData;
+
+typedef struct {
+    u8 r, g, b, a;
+} IvyColor;
+
+void Ivy_Gfx_Init(int width, int height);
+void Ivy_Gfx_BeginDrawing(void);
+void Ivy_Gfx_EndDrawing(void);
+void Ivy_Gfx_ClearBackground(IvyColor color);
+void Ivy_Gfx_SwapBuffers(void);
+
+void Ivy_Gfx_LoadIdentity(void);
+void Ivy_Gfx_MatrixMultiply(float *matrix);
+void Ivy_Gfx_DrawRenderBatchActive(const IvyGLRenderBatch *batch);
+IvyGLRenderBatch Ivy_Gfx_LoadRenderBatch(int numBuffers, int bufferElements);
+
+void Ivy_Gfx_UnloadShaderDefault(void);
+void Ivy_Gfx_LoadShaderDefault(void);
+u32 Ivy_Gfx_LoadShaderProgramEx(unsigned vsId, u32 fsId);
+u32 Ivy_Gfx_LoadTextureId(const void *data, int width, int height, int format, int mipmapCount);
+u32 Ivy_Gfx_LoadShader(const char *code, int type);
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif
