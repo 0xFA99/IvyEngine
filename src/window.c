@@ -1,6 +1,7 @@
 #include "ivy/window.h"
 #include "ivy/core.h"
 #include "ivy/math.h"
+#include "ivy/glfw_loader.h"
 
 extern IvyCoreData    IVY_CORE;
 extern IvyPlatformData IVY_PLATFORM;

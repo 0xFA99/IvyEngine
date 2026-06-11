@@ -1,10 +1,8 @@
 #include "ivy/core.h"
 #include "ivy/arena/linear.h"
+#include "ivy/glfw_loader.h"
 #include "ivy/glad_loader.h"
 #include "ivy/gfx.h"
-
-#define GLFW_INCLUDE_NONE
-#include "external/glfw3.h"
 
 #include <string.h>
 
@@ -95,6 +93,8 @@ static void Ivy_GL_LoadFunctions(void)
 static void Ivy_Core_InitPlatform(IvyArenaLinear *arena)
 {
     IVY_ASSERT(arena != NULL, "[ERROR] Arena is NULL!");
+
+    IVY_CHECK(Ivy_GLFW_LoadFunctions() == 0, "[GLFW] Failed to initialize GLFW!");
 
     glfwSetErrorCallback(Ivy_GLFW_Error);
 
@@ -256,6 +256,8 @@ void Ivy_Core_CloseWindow(void)
     IVY_CORE.window.ready = false;
     glfwDestroyWindow(IVY_PLATFORM.handle);
     glfwTerminate();
+
+    Ivy_GLFW_UnloadFunctions();
 }
 
 double Ivy_Core_GetTime(void)

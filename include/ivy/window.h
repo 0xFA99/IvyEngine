@@ -3,9 +3,7 @@
 
 #include "ivy/types.h"
 #include "ivy/math.h"
-
-#define GLFW_INCLUDE_NONE
-#include "external/glfw3.h"
+#include "ivy/glfw_loader.h"
 
 #include <stdbool.h>
 

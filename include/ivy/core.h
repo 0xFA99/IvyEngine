@@ -6,9 +6,6 @@
 #include "ivy/input.h"
 #include "ivy/forward.h"
 
-#define GLFW_INCLUDE_NONE
-#include "external/glfw3.h"
-
 #ifdef __cplusplus
 extern "C" {
 #endif

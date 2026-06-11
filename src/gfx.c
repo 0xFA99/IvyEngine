@@ -1,6 +1,7 @@
 #include "ivy/core.h"
 #include "ivy/gfx.h"
 
+#include "ivy/glfw_loader.h"
 #include "ivy/glad_loader.h"
 #include "ivy/arena/linear.h"
 
