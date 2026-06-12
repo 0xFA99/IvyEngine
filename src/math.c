@@ -55,3 +55,9 @@ IvyFloat16 Ivy_Math_MatrixToFloatV(const IvyMatrix m)
         m.m12, m.m13, m.m14, m.m15,
     }};
 }
+
+float Ivy_Math_FloorF(const float f)
+{
+    const int i = (int)f;
+    return (f < (float)i) ? (float)(i - 1) : (float)i;
+}

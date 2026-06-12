@@ -38,3 +38,12 @@ PFNGLGENTEXTURESPROC                glGenTextures               = NULL;
 PFNGLTEXIMAGE2DPROC                 glTexImage2D                = NULL;
 PFNGLTEXPARAMETERIVPROC             glTexParameteriv            = NULL;
 PFNGLTEXPARAMETERIPROC              glTexParameteri             = NULL;
+
+PFNGLGENFRAMEBUFFERSPROC            glGenFramebuffers           = NULL;
+PFNGLBINDFRAMEBUFFERPROC            glBindFramebuffer           = NULL;
+PFNGLGENRENDERBUFFERSPROC           glGenRenderbuffers          = NULL;
+PFNGLBINDRENDERBUFFERPROC           glBindRenderbuffer          = NULL;
+PFNGLFRAMEBUFFERTEXTUREPROC         glFramebufferTexture        = NULL;
+PFNGLFRAMEBUFFERRENDERBUFFERPROC    glFramebufferRenderbuffer   = NULL;
+PFNGLRENDERBUFFERSTORAGEPROC        glRenderbufferStorage       = NULL;
+PFNGLFRAMEBUFFERTEXTURE2DPROC       glFramebufferTexture2D      = NULL;

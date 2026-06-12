@@ -166,15 +166,16 @@ typedef struct {
     IvyArenaLinear *arena;
 } IvyCoreData;
 
-#define FLAG_SET(n, f)    ((n) |=  (f))
-#define FLAG_CLEAR(n, f)  ((n) &= ~(f))
-#define FLAG_TOGGLE(n, f) ((n) ^=  (f))
-#define FLAG_IS_SET(n, f) (((n) & (f)) == (f))
+#define IVY_FLAG_SET(n, f)    ((n) |=  (f))
+#define IVY_FLAG_CLEAR(n, f)  ((n) &= ~(f))
+#define IVY_FLAG_TOGGLE(n, f) ((n) ^=  (f))
+#define IVY_FLAG_IS_SET(n, f) (((n) & (f)) == (f))
 
 void   Ivy_Core_InitWindow(IvyArenaLinear *arena, u32 width, u32 height, const char *title);
 void   Ivy_Core_CloseWindow(void);
 
 double Ivy_Core_GetTime(void);
+void Ivy_Core_SetConfigFlags(u32 flags);
 
 #ifdef __cplusplus
 }

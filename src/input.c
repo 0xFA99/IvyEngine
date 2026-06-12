@@ -53,7 +53,7 @@ void Ivy_Input_PoolEvents(void)
 
     IVY_CORE.window.resizedLastFrame = false;
 
-    if ((IVY_CORE.window.eventWaiting) || (FLAG_IS_SET(IVY_CORE.window.flags, IVY_FLAG_WINDOW_MINIMIZED) && !FLAG_IS_SET(IVY_CORE.window.flags, IVY_FLAG_WINDOW_ALWAYS_RUN))) {
+    if ((IVY_CORE.window.eventWaiting) || (IVY_FLAG_IS_SET(IVY_CORE.window.flags, IVY_FLAG_WINDOW_MINIMIZED) && !IVY_FLAG_IS_SET(IVY_CORE.window.flags, IVY_FLAG_WINDOW_ALWAYS_RUN))) {
         glfwWaitEvents();
         IVY_CORE.time.prev = Ivy_Core_GetTime();
     }

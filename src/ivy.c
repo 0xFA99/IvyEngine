@@ -13,6 +13,7 @@ int main(void)
     Ivy_Arena_LinearInit(&arenaMain.arena, 10 * 1024 * 1024); // 10 MB
     arenaMain.snapshot = Ivy_Arena_LinearGetSnapshot(&arenaMain.arena);
 
+    Ivy_Core_SetConfigFlags(IVY_FLAG_WINDOW_RESIZABLE);
     Ivy_Core_InitWindow(&arenaMain.arena, 800, 600, "Ivy");
 
     while (!Ivy_Window_ShouldClose())

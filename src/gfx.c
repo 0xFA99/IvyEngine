@@ -12,11 +12,13 @@ IvyGLData IVY_GL = {0};
 
 void Ivy_Gfx_ClearBackground(const IvyColor color)
 {
+    const float inv255 = 1.0f / 255.0f;
+
     glClearColor(
-        (float)color.r / 255.0f,
-        (float)color.g / 255.0f,
-        (float)color.b / 255.0f,
-        (float)color.a / 255.0f);
+        (float)color.r * inv255,
+        (float)color.g * inv255,
+        (float)color.b * inv255,
+        (float)color.a * inv255);
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
@@ -128,7 +130,6 @@ void Ivy_Gfx_GetGLTextureFormats(int format, u32 *glInternalFormat, u32 *glForma
         *glInternalFormat = GL_RG8;
         *glFormat = GL_RG;
         *glType = GL_UNSIGNED_BYTE;
-        return;
     }
 }
 
@@ -322,7 +323,6 @@ IvyGLRenderBatch Ivy_Gfx_LoadRenderBatch(const int numBuffers, const int bufferE
 
         batch.vertexBuffer[i].indices = (u32 *)Ivy_Arena_LinearAlloc(IVY_CORE.arena, bufferElements * 6 * sizeof(int));
 
-
         for (int j = 0; j < (3 * 4 * bufferElements); j++) batch.vertexBuffer[i].vertices[j]  = 0.0f;
         for (int j = 0; j < (2 * 4 * bufferElements); j++) batch.vertexBuffer[i].texCoords[j] = 0.0f;
         for (int j = 0; j < (3 * 4 * bufferElements); j++) batch.vertexBuffer[i].normals[j]   = 0.0f;
@@ -448,4 +448,80 @@ void Ivy_Gfx_Init(const int width, const int height)
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     glClearDepth(1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+}
+
+IvyRenderTexture Ivy_Gfx_LoadRenderTexture(int width, int height)
+{
+    IvyRenderTexture target = {0};
+
+    target.id = Ivy_Gfx_LoadFramebuffer();
+
+    if (IVY_LIKELY(target.id > 0)) {
+        Ivy_Gfx_EnableFramebuffer(target.id);
+
+        target.texture.id = Ivy_Gfx_LoadTextureId(NULL, width, height, IVY_PIXELFORMAT_UNCOMPRESSED_R8G8B8A8, 1);
+        target.texture.width = width;
+        target.texture.height = height;
+        target.texture.format = IVY_PIXELFORMAT_UNCOMPRESSED_R8G8B8A8;
+        target.texture.mipmaps = 1;
+
+        target.depth.id = Ivy_Gfx_LoadTextureDepth(width, height);
+        target.depth.width = width;
+        target.depth.height = height;
+        target.depth.format = 19;
+        target.depth.mipmaps = 1;
+
+        Ivy_Gfx_FramebufferAttach(target.id, target.texture.id, IVY_ATTACHMENT_COLOR_CHANNEL0, IVY_ATTACHMENT_TEXTURE2D, 0);
+        Ivy_Gfx_FramebufferAttach(target.id, target.depth.id, IVY_ATTACHMENT_DEPTH, IVY_ATTACHMENT_RENDERBUFFER, 0);
+
+        Ivy_Gfx_DisableFramebuffer();
+    }
+
+    return target;
+}
+
+u32 Ivy_Gfx_LoadFramebuffer(void)
+{
+    u32 fboId = 0;
+    glGenFramebuffers(1, &fboId);
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+    return fboId;
+}
+
+void Ivy_Gfx_EnableFramebuffer(u32 id)
+{
+    glBindFramebuffer(GL_FRAMEBUFFER, id);
+}
+
+void Ivy_Gfx_DisableFramebuffer(void)
+{
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+}
+
+u32 Ivy_Gfx_LoadTextureDepth(const int width, const int height)
+{
+    u32 id = 0;
+    const u32 glInternalFormat = GL_DEPTH_COMPONENT;
+
+    glGenRenderbuffers(1, &id);
+    glBindRenderbuffer(GL_RENDERBUFFER, id);
+    glRenderbufferStorage(GL_RENDERBUFFER, glInternalFormat, width, height);
+
+    glBindRenderbuffer(GL_RENDERBUFFER, 0);
+
+    return id;
+}
+
+void Ivy_Gfx_FramebufferAttach(u32 id, u32 texId, int attachType, int texType, int mipLevel) {
+    glBindFramebuffer(GL_FRAMEBUFFER, id);
+
+    if (texType == IVY_ATTACHMENT_TEXTURE2D)
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + attachType, GL_TEXTURE_2D, texId, mipLevel);
+
+    else if (texType == IVY_ATTACHMENT_DEPTH) {
+        glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, texId);
+
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    }
 }

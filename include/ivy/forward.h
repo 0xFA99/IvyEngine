@@ -5,8 +5,9 @@
 extern "C" {
 #endif
 
-typedef struct IvyArenaLinear         IvyArenaLinear;
-typedef struct IvyArenaLinearSnapshot IvyArenaLinearSnapshot;
+typedef struct IvyArenaLinear           IvyArenaLinear;
+typedef struct IvyArenaLinearSnapshot   IvyArenaLinearSnapshot;
+typedef struct IvyVirtualResolution     IvyVirtualResolution;
 
 #ifdef __cplusplus
 }

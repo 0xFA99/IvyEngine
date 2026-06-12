@@ -165,6 +165,30 @@ typedef enum {
     IVY_PIXELFORMAT_COMPRESSED_ASTC_8x8_RGBA
 } IvyPixelFormat;
 
+typedef enum {
+    IVY_ATTACHMENT_COLOR_CHANNEL0 = 0,
+    IVY_ATTACHMENT_COLOR_CHANNEL1 = 1,
+    IVY_ATTACHMENT_COLOR_CHANNEL2 = 2,
+    IVY_ATTACHMENT_COLOR_CHANNEL3 = 3,
+    IVY_ATTACHMENT_COLOR_CHANNEL4 = 4,
+    IVY_ATTACHMENT_COLOR_CHANNEL5 = 5,
+    IVY_ATTACHMENT_COLOR_CHANNEL6 = 6,
+    IVY_ATTACHMENT_COLOR_CHANNEL7 = 7,
+    IVY_ATTACHMENT_DEPTH = 100,
+    IVY_ATTACHMENT_STENCIL = 200,
+} IvyFramebufferAttachType;
+
+typedef enum {
+    IVY_ATTACHMENT_CUBEMAP_POSITIVE_X = 0,
+    IVY_ATTACHMENT_CUBEMAP_NEGATIVE_X = 1,
+    IVY_ATTACHMENT_CUBEMAP_POSITIVE_Y = 2,
+    IVY_ATTACHMENT_CUBEMAP_NEGATIVE_Y = 3,
+    IVY_ATTACHMENT_CUBEMAP_POSITIVE_Z = 4,
+    IVY_ATTACHMENT_CUBEMAP_NEGATIVE_Z = 5,
+    IVY_ATTACHMENT_TEXTURE2D = 100,
+    IVY_ATTACHMENT_RENDERBUFFER = 200,
+} rlFramebufferAttachTextureType;
+
 typedef struct {
     int mode;
     int vertexCount;
@@ -263,6 +287,20 @@ typedef struct {
     u8 r, g, b, a;
 } IvyColor;
 
+typedef struct {
+    u32 id;
+    int width;
+    int height;
+    int mipmaps;
+    int format;
+} IvyTexture;
+
+typedef struct {
+    u32 id;
+    IvyTexture texture;
+    IvyTexture depth;
+} IvyRenderTexture;
+
 void Ivy_Gfx_Init(int width, int height);
 void Ivy_Gfx_BeginDrawing(void);
 void Ivy_Gfx_EndDrawing(void);
@@ -279,6 +317,15 @@ void Ivy_Gfx_LoadShaderDefault(void);
 u32 Ivy_Gfx_LoadShaderProgramEx(unsigned vsId, u32 fsId);
 u32 Ivy_Gfx_LoadTextureId(const void *data, int width, int height, int format, int mipmapCount);
 u32 Ivy_Gfx_LoadShader(const char *code, int type);
+
+IvyRenderTexture Ivy_Gfx_LoadRenderTexture(int width, int height);
+u32 Ivy_Gfx_LoadFramebuffer(void);
+void Ivy_Gfx_EnableFramebuffer(u32 id);
+void Ivy_Gfx_DisableFramebuffer(void);
+
+u32 Ivy_Gfx_LoadTextureDepth(int width, int height);
+void Ivy_Gfx_FramebufferAttach(u32 id, u32 texId, int attachType, int texType, int mipLevel);
+u32 Ivy_Gfx_LoadTextureDepth(int width, int height);
 
 #ifdef __cplusplus
 }

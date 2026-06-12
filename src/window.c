@@ -16,7 +16,7 @@ IvyVector2 Ivy_Window_GetWindowScaleDPI(void)
 {
     IvyVector2 scale = { 1.0f, 1.0f };
 
-    if (FLAG_IS_SET(IVY_CORE.window.flags, IVY_FLAG_WINDOW_HIGHDPI))
+    if (IVY_FLAG_IS_SET(IVY_CORE.window.flags, IVY_FLAG_WINDOW_HIGHDPI))
         glfwGetWindowContentScale(IVY_PLATFORM.handle, &scale.x, &scale.y);
 
     return scale;
@@ -30,7 +30,7 @@ int Ivy_Window_GetCurrentMonitor(void)
 
     if (monitorCount < 1) return 0;
 
-    if (FLAG_IS_SET(IVY_CORE.window.flags, IVY_FLAG_FULLSCREEN_MODE)) {
+    if (IVY_FLAG_IS_SET(IVY_CORE.window.flags, IVY_FLAG_FULLSCREEN_MODE)) {
         GLFWmonitor *monitor = glfwGetWindowMonitor(IVY_PLATFORM.handle);
         for (int i = 0; i < monitorCount; i++) {
             if (monitors[i] == monitor) { index = i; break; }
@@ -86,13 +86,13 @@ void Ivy_Window_MaximizeWindow(void)
 {
     if (glfwGetWindowAttrib(IVY_PLATFORM.handle, GLFW_RESIZABLE) == GLFW_TRUE) {
         glfwMaximizeWindow(IVY_PLATFORM.handle);
-        FLAG_SET(IVY_CORE.window.flags, IVY_FLAG_WINDOW_MAXIMIZED);
+        IVY_FLAG_SET(IVY_CORE.window.flags, IVY_FLAG_WINDOW_MAXIMIZED);
     }
 }
 
 void Ivy_Window_ToggleFullscreen(void)
 {
-    if (!FLAG_IS_SET(IVY_CORE.window.flags, IVY_FLAG_FULLSCREEN_MODE)) {
+    if (!IVY_FLAG_IS_SET(IVY_CORE.window.flags, IVY_FLAG_FULLSCREEN_MODE)) {
         IVY_CORE.window.prevPosition = IVY_CORE.window.position;
         IVY_CORE.window.prevScreen   = IVY_CORE.window.screen;
 
@@ -107,7 +107,7 @@ void Ivy_Window_ToggleFullscreen(void)
             IVY_CORE.window.display.height = mode->height;
             IVY_CORE.window.position = (IvyPoint){ 0, 0 };
             IVY_CORE.window.screen   = IVY_CORE.window.display;
-            FLAG_SET(IVY_CORE.window.flags, IVY_FLAG_FULLSCREEN_MODE);
+            IVY_FLAG_SET(IVY_CORE.window.flags, IVY_FLAG_FULLSCREEN_MODE);
 
 #if defined(_GLFW_X11) || defined(_GLFW_WAYLAND)
             glfwSetWindowAttrib(IVY_PLATFORM.handle, GLFW_DECORATED, GLFW_FALSE);
@@ -120,7 +120,7 @@ void Ivy_Window_ToggleFullscreen(void)
     } else {
         IVY_CORE.window.position = IVY_CORE.window.prevPosition;
         IVY_CORE.window.screen   = IVY_CORE.window.prevScreen;
-        FLAG_CLEAR(IVY_CORE.window.flags, IVY_FLAG_FULLSCREEN_MODE);
+        IVY_FLAG_CLEAR(IVY_CORE.window.flags, IVY_FLAG_FULLSCREEN_MODE);
 
         glfwSetWindowMonitor(IVY_PLATFORM.handle, NULL,
                              IVY_CORE.window.position.x, IVY_CORE.window.position.y,
@@ -133,13 +133,13 @@ void Ivy_Window_ToggleFullscreen(void)
 #endif
     }
 
-    if (FLAG_IS_SET(IVY_CORE.window.flags, IVY_FLAG_VSYNC_HINT))
+    if (IVY_FLAG_IS_SET(IVY_CORE.window.flags, IVY_FLAG_VSYNC_HINT))
         glfwSwapInterval(1);
 }
 
 void Ivy_Window_ToggleBorderlessWindow(void)
 {
-    if (FLAG_IS_SET(IVY_CORE.window.flags, IVY_FLAG_FULLSCREEN_MODE))
+    if (IVY_FLAG_IS_SET(IVY_CORE.window.flags, IVY_FLAG_FULLSCREEN_MODE))
         Ivy_Window_ToggleFullscreen();
 
     int monitorCount = 0;
@@ -151,12 +151,12 @@ void Ivy_Window_ToggleBorderlessWindow(void)
     const GLFWvidmode *mode = glfwGetVideoMode(monitors[monitorIdx]);
     if (!mode) return;
 
-    if (!FLAG_IS_SET(IVY_CORE.window.flags, IVY_FLAG_BORDERLESS_WINDOWED_MODE)) {
+    if (!IVY_FLAG_IS_SET(IVY_CORE.window.flags, IVY_FLAG_BORDERLESS_WINDOWED_MODE)) {
         IVY_CORE.window.prevPosition = IVY_CORE.window.position;
         IVY_CORE.window.prevScreen   = IVY_CORE.window.screen;
 
         glfwSetWindowAttrib(IVY_PLATFORM.handle, GLFW_DECORATED, GLFW_FALSE);
-        FLAG_SET(IVY_CORE.window.flags, IVY_FLAG_WINDOW_UNDECORATED);
+        IVY_FLAG_SET(IVY_CORE.window.flags, IVY_FLAG_WINDOW_UNDECORATED);
 
         glfwGetMonitorPos(monitors[monitorIdx],
                           &IVY_CORE.window.position.x, &IVY_CORE.window.position.y);
@@ -168,20 +168,20 @@ void Ivy_Window_ToggleBorderlessWindow(void)
                              IVY_CORE.window.screen.width, IVY_CORE.window.screen.height,
                              mode->refreshRate);
         glfwFocusWindow(IVY_PLATFORM.handle);
-        FLAG_SET(IVY_CORE.window.flags, IVY_FLAG_BORDERLESS_WINDOWED_MODE);
+        IVY_FLAG_SET(IVY_CORE.window.flags, IVY_FLAG_BORDERLESS_WINDOWED_MODE);
     } else {
         IVY_CORE.window.position = IVY_CORE.window.prevPosition;
         IVY_CORE.window.screen   = IVY_CORE.window.prevScreen;
 
         glfwSetWindowAttrib(IVY_PLATFORM.handle, GLFW_DECORATED, GLFW_TRUE);
-        FLAG_CLEAR(IVY_CORE.window.flags, IVY_FLAG_WINDOW_UNDECORATED);
+        IVY_FLAG_CLEAR(IVY_CORE.window.flags, IVY_FLAG_WINDOW_UNDECORATED);
 
         glfwSetWindowMonitor(IVY_PLATFORM.handle, NULL,
                              IVY_CORE.window.position.x, IVY_CORE.window.position.y,
                              IVY_CORE.window.screen.width, IVY_CORE.window.screen.height,
                              mode->refreshRate);
         glfwFocusWindow(IVY_PLATFORM.handle);
-        FLAG_CLEAR(IVY_CORE.window.flags, IVY_FLAG_BORDERLESS_WINDOWED_MODE);
+        IVY_FLAG_CLEAR(IVY_CORE.window.flags, IVY_FLAG_BORDERLESS_WINDOWED_MODE);
     }
 }
 
@@ -190,11 +190,11 @@ void Ivy_Window_SetWindowState(const u32 flags)
     IVY_CHECK(IVY_CORE.window.ready, "[ERROR] SetWindowState called before window is ready!");
 
 #define CHANGED_AND_SET(f) \
-    (FLAG_IS_SET(IVY_CORE.window.flags, f) != FLAG_IS_SET(flags, f)) && FLAG_IS_SET(flags, f)
+    (IVY_FLAG_IS_SET(IVY_CORE.window.flags, f) != IVY_FLAG_IS_SET(flags, f)) && IVY_FLAG_IS_SET(flags, f)
 
     if (CHANGED_AND_SET(IVY_FLAG_VSYNC_HINT)) {
         glfwSwapInterval(1);
-        FLAG_SET(IVY_CORE.window.flags, IVY_FLAG_VSYNC_HINT);
+        IVY_FLAG_SET(IVY_CORE.window.flags, IVY_FLAG_VSYNC_HINT);
     }
     if (CHANGED_AND_SET(IVY_FLAG_BORDERLESS_WINDOWED_MODE))
         Ivy_Window_ToggleBorderlessWindow();
@@ -204,15 +204,15 @@ void Ivy_Window_SetWindowState(const u32 flags)
 
     if (CHANGED_AND_SET(IVY_FLAG_WINDOW_RESIZABLE)) {
         glfwSetWindowAttrib(IVY_PLATFORM.handle, GLFW_RESIZABLE, GLFW_TRUE);
-        FLAG_SET(IVY_CORE.window.flags, IVY_FLAG_WINDOW_RESIZABLE);
+        IVY_FLAG_SET(IVY_CORE.window.flags, IVY_FLAG_WINDOW_RESIZABLE);
     }
     if (CHANGED_AND_SET(IVY_FLAG_WINDOW_UNDECORATED)) {
         glfwSetWindowAttrib(IVY_PLATFORM.handle, GLFW_DECORATED, GLFW_FALSE);
-        FLAG_SET(IVY_CORE.window.flags, IVY_FLAG_WINDOW_UNDECORATED);
+        IVY_FLAG_SET(IVY_CORE.window.flags, IVY_FLAG_WINDOW_UNDECORATED);
     }
     if (CHANGED_AND_SET(IVY_FLAG_WINDOW_HIDDEN)) {
         glfwHideWindow(IVY_PLATFORM.handle);
-        FLAG_SET(IVY_CORE.window.flags, IVY_FLAG_WINDOW_HIDDEN);
+        IVY_FLAG_SET(IVY_CORE.window.flags, IVY_FLAG_WINDOW_HIDDEN);
     }
     if (CHANGED_AND_SET(IVY_FLAG_WINDOW_MINIMIZED))
         Ivy_Window_MinimizeWindow();
@@ -222,18 +222,18 @@ void Ivy_Window_SetWindowState(const u32 flags)
 
     if (CHANGED_AND_SET(IVY_FLAG_WINDOW_UNFOCUSED)) {
         glfwSetWindowAttrib(IVY_PLATFORM.handle, GLFW_FOCUS_ON_SHOW, GLFW_FALSE);
-        FLAG_SET(IVY_CORE.window.flags, IVY_FLAG_WINDOW_UNFOCUSED);
+        IVY_FLAG_SET(IVY_CORE.window.flags, IVY_FLAG_WINDOW_UNFOCUSED);
     }
     if (CHANGED_AND_SET(IVY_FLAG_WINDOW_TOPMOST)) {
         glfwSetWindowAttrib(IVY_PLATFORM.handle, GLFW_FLOATING, GLFW_TRUE);
-        FLAG_SET(IVY_CORE.window.flags, IVY_FLAG_WINDOW_TOPMOST);
+        IVY_FLAG_SET(IVY_CORE.window.flags, IVY_FLAG_WINDOW_TOPMOST);
     }
     if (CHANGED_AND_SET(IVY_FLAG_WINDOW_ALWAYS_RUN))
-        FLAG_SET(IVY_CORE.window.flags, IVY_FLAG_WINDOW_ALWAYS_RUN);
+        IVY_FLAG_SET(IVY_CORE.window.flags, IVY_FLAG_WINDOW_ALWAYS_RUN);
 
     if (CHANGED_AND_SET(IVY_FLAG_WINDOW_MOUSE_PASSTHROUGH)) {
         glfwSetWindowAttrib(IVY_PLATFORM.handle, GLFW_MOUSE_PASSTHROUGH, GLFW_TRUE);
-        FLAG_SET(IVY_CORE.window.flags, IVY_FLAG_WINDOW_MOUSE_PASSTHROUGH);
+        IVY_FLAG_SET(IVY_CORE.window.flags, IVY_FLAG_WINDOW_MOUSE_PASSTHROUGH);
     }
 
     if (CHANGED_AND_SET(IVY_FLAG_WINDOW_TRANSPARENT))
@@ -263,7 +263,7 @@ void Ivy_Window_FramebufferSizeCallback(GLFWwindow *window, int width, int heigh
     IVY_CORE.window.currentFBO    = IVY_CORE.window.render;
     IVY_CORE.window.resizedLastFrame = true;
 
-    if (FLAG_IS_SET(IVY_CORE.window.flags, IVY_FLAG_FULLSCREEN_MODE)) {
+    if (IVY_FLAG_IS_SET(IVY_CORE.window.flags, IVY_FLAG_FULLSCREEN_MODE)) {
         IVY_CORE.window.screen.width  = width;
         IVY_CORE.window.screen.height = height;
         IVY_CORE.window.screenScale   = Ivy_Math_MatrixScale(1.0f, 1.0f, 1.0f);
@@ -273,8 +273,8 @@ void Ivy_Window_FramebufferSizeCallback(GLFWwindow *window, int width, int heigh
 void Ivy_Window_ContentScaleCallback(GLFWwindow *window, float scaleX, float scaleY)
 {
     (void)window;
-    IVY_CORE.window.render.width  = (u32)(IVY_CORE.window.screen.width  * scaleX);
-    IVY_CORE.window.render.height = (u32)(IVY_CORE.window.screen.height * scaleY);
+    IVY_CORE.window.render.width  = (u32)((float)IVY_CORE.window.screen.width  * scaleX);
+    IVY_CORE.window.render.height = (u32)((float)IVY_CORE.window.screen.height * scaleY);
     IVY_CORE.window.currentFBO    = IVY_CORE.window.render;
     IVY_CORE.window.screenScale   = Ivy_Math_MatrixScale(scaleX, scaleY, 1.0f);
 }
@@ -289,20 +289,20 @@ void Ivy_Window_PosCallback(GLFWwindow *window, int x, int y)
 void Ivy_Window_IconifyCallback(GLFWwindow *window, int iconified)
 {
     (void)window;
-    if (iconified) FLAG_SET(IVY_CORE.window.flags,   IVY_FLAG_WINDOW_MINIMIZED);
-    else           FLAG_CLEAR(IVY_CORE.window.flags, IVY_FLAG_WINDOW_MINIMIZED);
+    if (iconified) IVY_FLAG_SET(IVY_CORE.window.flags,   IVY_FLAG_WINDOW_MINIMIZED);
+    else           IVY_FLAG_CLEAR(IVY_CORE.window.flags, IVY_FLAG_WINDOW_MINIMIZED);
 }
 
 void Ivy_Window_MaximizeCallback(GLFWwindow *window, int maximized)
 {
     (void)window;
-    if (maximized) FLAG_SET(IVY_CORE.window.flags,   IVY_FLAG_WINDOW_MAXIMIZED);
-    else           FLAG_CLEAR(IVY_CORE.window.flags, IVY_FLAG_WINDOW_MAXIMIZED);
+    if (maximized) IVY_FLAG_SET(IVY_CORE.window.flags,   IVY_FLAG_WINDOW_MAXIMIZED);
+    else           IVY_FLAG_CLEAR(IVY_CORE.window.flags, IVY_FLAG_WINDOW_MAXIMIZED);
 }
 
 void Ivy_Window_FocusCallback(GLFWwindow *window, int focused)
 {
     (void)window;
-    if (focused) FLAG_CLEAR(IVY_CORE.window.flags, IVY_FLAG_WINDOW_UNFOCUSED);
-    else         FLAG_SET(IVY_CORE.window.flags,   IVY_FLAG_WINDOW_UNFOCUSED);
+    if (focused) IVY_FLAG_CLEAR(IVY_CORE.window.flags, IVY_FLAG_WINDOW_UNFOCUSED);
+    else         IVY_FLAG_SET(IVY_CORE.window.flags,   IVY_FLAG_WINDOW_UNFOCUSED);
 }

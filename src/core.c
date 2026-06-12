@@ -88,6 +88,14 @@ static void Ivy_GL_LoadFunctions(void)
     glTexParameteri    = (PFNGLTEXPARAMETERIPROC)    load("glTexParameteri");
     glTexParameteriv   = (PFNGLTEXPARAMETERIVPROC)   load("glTexParameteriv");
     glPixelStorei      = (PFNGLPIXELSTOREIPROC)      load("glPixelStorei");
+
+    glGenFramebuffers   = (PFNGLGENFRAMEBUFFERSPROC) load("glGenFramebuffers");
+    glBindFramebuffer   = (PFNGLBINDFRAMEBUFFERPROC) load("glBindFramebuffer");
+    glGenRenderbuffers  = (PFNGLGENRENDERBUFFERSPROC) load("glGenRenderbuffers");
+    glBindRenderbuffer = (PFNGLBINDRENDERBUFFERPROC) load("glBindRenderbuffer");
+    glFramebufferTexture = (PFNGLFRAMEBUFFERTEXTUREPROC) load("glFramebufferTexture");
+    glFramebufferRenderbuffer = (PFNGLFRAMEBUFFERRENDERBUFFERPROC) load("glFramebufferRenderbuffer");
+    glRenderbufferStorage = (PFNGLRENDERBUFFERSTORAGEPROC) load("glRenderbufferStorage");
 }
 
 static void Ivy_Core_InitPlatform(IvyArenaLinear *arena)
@@ -117,23 +125,23 @@ static void Ivy_Core_InitPlatform(IvyArenaLinear *arena)
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GLFW_FALSE);
 
     // Window hints from flags
-    glfwWindowHint(GLFW_RESIZABLE,  FLAG_IS_SET(IVY_CORE.window.flags, IVY_FLAG_WINDOW_RESIZABLE)  ? GLFW_TRUE : GLFW_FALSE);
-    glfwWindowHint(GLFW_VISIBLE,   !FLAG_IS_SET(IVY_CORE.window.flags, IVY_FLAG_WINDOW_HIDDEN)     ? GLFW_TRUE : GLFW_FALSE);
-    glfwWindowHint(GLFW_DECORATED, !FLAG_IS_SET(IVY_CORE.window.flags, IVY_FLAG_WINDOW_UNDECORATED) ? GLFW_TRUE : GLFW_FALSE);
+    glfwWindowHint(GLFW_RESIZABLE,  IVY_FLAG_IS_SET(IVY_CORE.window.flags, IVY_FLAG_WINDOW_RESIZABLE)  ? GLFW_TRUE : GLFW_FALSE);
+    glfwWindowHint(GLFW_VISIBLE,   !IVY_FLAG_IS_SET(IVY_CORE.window.flags, IVY_FLAG_WINDOW_HIDDEN)     ? GLFW_TRUE : GLFW_FALSE);
+    glfwWindowHint(GLFW_DECORATED, !IVY_FLAG_IS_SET(IVY_CORE.window.flags, IVY_FLAG_WINDOW_UNDECORATED) ? GLFW_TRUE : GLFW_FALSE);
 
-    if (FLAG_IS_SET(IVY_CORE.window.flags, IVY_FLAG_MSAA_4X_HINT))
+    if (IVY_FLAG_IS_SET(IVY_CORE.window.flags, IVY_FLAG_MSAA_4X_HINT))
         glfwWindowHint(GLFW_SAMPLES, 4);
 
     // Clear pre-init minimized/maximized hints — they'll be applied after creation
-    FLAG_CLEAR(IVY_CORE.window.flags, IVY_FLAG_WINDOW_MINIMIZED);
-    FLAG_CLEAR(IVY_CORE.window.flags, IVY_FLAG_WINDOW_MAXIMIZED);
+    IVY_FLAG_CLEAR(IVY_CORE.window.flags, IVY_FLAG_WINDOW_MINIMIZED);
+    IVY_FLAG_CLEAR(IVY_CORE.window.flags, IVY_FLAG_WINDOW_MAXIMIZED);
 
     // Auto-fullscreen if no size given
     if (IVY_CORE.window.screen.width == 0 || IVY_CORE.window.screen.height == 0)
-        FLAG_SET(IVY_CORE.window.flags, IVY_FLAG_FULLSCREEN_MODE);
+        IVY_FLAG_SET(IVY_CORE.window.flags, IVY_FLAG_FULLSCREEN_MODE);
 
     // Create window
-    if (FLAG_IS_SET(IVY_CORE.window.flags, IVY_FLAG_FULLSCREEN_MODE)) {
+    if (IVY_FLAG_IS_SET(IVY_CORE.window.flags, IVY_FLAG_FULLSCREEN_MODE)) {
         GLFWmonitor *monitor = glfwGetPrimaryMonitor();
         const GLFWvidmode *mode = glfwGetVideoMode(monitor);
         IVY_CORE.window.display.width  = mode->width;
@@ -181,7 +189,7 @@ static void Ivy_Core_InitPlatform(IvyArenaLinear *arena)
 
     IVY_CHECK(IVY_CORE.window.ready, "[GL] Failed to make context current");
 
-    glfwSwapInterval(FLAG_IS_SET(IVY_CORE.window.flags, IVY_FLAG_VSYNC_HINT) ? 1 : 0);
+    glfwSwapInterval(IVY_FLAG_IS_SET(IVY_CORE.window.flags, IVY_FLAG_VSYNC_HINT) ? 1 : 0);
 
     IVY_CORE.window.render     = IVY_CORE.window.screen;
     IVY_CORE.window.currentFBO = IVY_CORE.window.render;
@@ -211,7 +219,7 @@ static void Ivy_Core_InitPlatform(IvyArenaLinear *arena)
     glfwSetWindowMaximizeCallback(IVY_PLATFORM.handle,  Ivy_Window_MaximizeCallback);
     glfwSetWindowFocusCallback(IVY_PLATFORM.handle,     Ivy_Window_FocusCallback);
 
-    if (FLAG_IS_SET(IVY_CORE.window.flags, IVY_FLAG_WINDOW_HIGHDPI)) {
+    if (IVY_FLAG_IS_SET(IVY_CORE.window.flags, IVY_FLAG_WINDOW_HIGHDPI)) {
         glfwSetWindowContentScaleCallback(IVY_PLATFORM.handle, Ivy_Window_ContentScaleCallback);
     }
 
@@ -263,4 +271,9 @@ void Ivy_Core_CloseWindow(void)
 double Ivy_Core_GetTime(void)
 {
     return glfwGetTime();
+}
+
+void Ivy_Core_SetConfigFlags(const u32 flags)
+{
+    IVY_FLAG_SET(IVY_CORE.window.flags, flags);
 }

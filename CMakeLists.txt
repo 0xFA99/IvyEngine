@@ -12,6 +12,7 @@ add_library(${PROJECT_NAME} STATIC
 		src/glfw_loader.c
 		src/glad_loader.c
 		src/arena/linear.c
+		src/virtual_resolution.c
 )
 target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
 

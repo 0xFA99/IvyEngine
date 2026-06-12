@@ -23,6 +23,11 @@ typedef struct {
 } IvyVector2;
 
 typedef struct {
+    float x, y;
+    float width, height;
+} IvyRectangle;
+
+typedef struct {
     float m0,  m4,  m8,  m12;
     float m1,  m5,  m9,  m13;
     float m2,  m6,  m10, m14;
@@ -37,6 +42,8 @@ IvyMatrix  Ivy_Math_MatrixIdentity(void);
 IvyMatrix  Ivy_Math_MatrixScale(float x, float y, float z);
 IvyMatrix  Ivy_Math_MatrixMultiply(IvyMatrix left, IvyMatrix right);
 IvyFloat16 Ivy_Math_MatrixToFloatV(IvyMatrix mat);
+
+float Ivy_Math_FloorF(float f);
 
 #ifdef __cplusplus
 }

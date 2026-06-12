@@ -60,6 +60,11 @@
 #define GL_TEXTURE_BASE_LEVEL           0x813C
 #define GL_TEXTURE_MAX_LEVEL            0x813D
 #define GL_TEXTURE_MIN_FILTER           0x2801
+#define GL_FRAMEBUFFER 0x8D40
+#define GL_DEPTH_COMPONENT 0x1902
+#define GL_RENDERBUFFER 0x8D41
+#define GL_COLOR_ATTACHMENT0 0x8CE0
+#define GL_DEPTH_ATTACHMENT 0x8D00
 
 typedef void (*PFNGLBINDBUFFERPROC)(u32 target, u32 buffer);
 typedef void (*PFNGLBINDVERTEXARRAYPROC)(u32 array);
@@ -91,7 +96,6 @@ typedef int  (*PFNGLGETUNIFORMLOCATIONPROC)(u32 program, const char *name);
 typedef void (*PFNGLGENBUFFERSPROC)(int n, u32 *buffers);
 typedef void (*PFNGLBUFFERDATAPROC)(u32 target, ptrdiff_t size, const void *data, u32 usage);
 typedef void (*PFNGLENABLEVERTEXATTRIBARRAYPROC)(u32 index);
-typedef void (*PFNGLENABLEVERTEXATTRIBARRAYPROC)(u32 index);
 typedef void (*PFNGLVERTEXATTRIBPOINTERPROC)(u32 index, int size, u32 type, u8 normalized, int stride, const void *pointer);
 typedef void (*PFNGLGENVERTEXARRAYSPROC)(int n, u32 *arrays);
 typedef void (*PFNGLBINDTEXTUREPROC)(u32 target, u32 texture);
@@ -100,6 +104,15 @@ typedef void (*PFNGLGENTEXTURESPROC)(int n, u32 *textures);
 typedef void (*PFNGLTEXIMAGE2DPROC)(u32 target, int level, int internalformat, int width, int height, int border, u32 format, u32 type, const void *pixels);
 typedef void (*PFNGLTEXPARAMETERIVPROC)(u32 target, u32 pname, const int *params);
 typedef void (*PFNGLTEXPARAMETERIPROC)(u32 target, u32 pname, int param);
+
+typedef void (*PFNGLGENFRAMEBUFFERSPROC)(int n, u32 *framebuffers);
+typedef void (*PFNGLBINDFRAMEBUFFERPROC)(u32 target, u32 framebuffer);
+typedef void (*PFNGLGENRENDERBUFFERSPROC)(int n, u32 *renderbuffers);
+typedef void (*PFNGLBINDRENDERBUFFERPROC)(u32 target, u32 renderbuffer);
+typedef void (*PFNGLFRAMEBUFFERTEXTUREPROC)(u32 target, u32 attachment, u32 texture, int level);
+typedef void (*PFNGLFRAMEBUFFERRENDERBUFFERPROC)(u32 target, u32 attachment, u32 renderbuffertarget, u32 renderbuffer);
+typedef void (*PFNGLRENDERBUFFERSTORAGEPROC)(u32 target, u32 internalformat, int width, int height);
+typedef void (*PFNGLFRAMEBUFFERTEXTURE2DPROC)(u32 target, u32 attachment, u32 textarget, u32 texture, int level);
 
 extern PFNGLBINDBUFFERPROC              glBindBuffer;
 extern PFNGLBINDVERTEXARRAYPROC         glBindVertexArray;
@@ -139,5 +152,14 @@ extern PFNGLGENTEXTURESPROC             glGenTextures;
 extern PFNGLTEXIMAGE2DPROC              glTexImage2D;
 extern PFNGLTEXPARAMETERIVPROC          glTexParameteriv;
 extern PFNGLTEXPARAMETERIPROC           glTexParameteri;
+
+extern PFNGLGENFRAMEBUFFERSPROC         glGenFramebuffers;
+extern PFNGLBINDFRAMEBUFFERPROC         glBindFramebuffer;
+extern PFNGLGENRENDERBUFFERSPROC        glGenRenderbuffers;
+extern PFNGLBINDRENDERBUFFERPROC        glBindRenderbuffer;
+extern PFNGLFRAMEBUFFERTEXTUREPROC      glFramebufferTexture;
+extern PFNGLFRAMEBUFFERRENDERBUFFERPROC glFramebufferRenderbuffer;
+extern PFNGLRENDERBUFFERSTORAGEPROC     glRenderbufferStorage;
+extern PFNGLFRAMEBUFFERTEXTURE2DPROC    glFramebufferTexture2D;
 
 #endif
