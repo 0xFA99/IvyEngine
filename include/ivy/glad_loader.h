@@ -1,6 +1,9 @@
 #ifndef IVY_GL_LOADER_H
 #define IVY_GL_LOADER_H
 
+#include <stdbool.h>
+
+
 #include "ivy/types.h"
 
 #define GL_COLOR_BUFFER_BIT             0x00004000
@@ -65,6 +68,14 @@
 #define GL_RENDERBUFFER 0x8D41
 #define GL_COLOR_ATTACHMENT0 0x8CE0
 #define GL_DEPTH_ATTACHMENT 0x8D00
+#define GL_TEXTURE 0x1702
+#define GL_FRAMEBUFFER_ATTACHMENT_OBJECT_NAME 0x8CD1
+#define GL_FRAMEBUFFER_ATTACHMENT_OBJECT_TYPE 0x8CD0
+#define GL_TRUE 1
+#define GL_UNSIGNED_INT 0x1405
+#define GL_TRIANGLES 0x0004
+#define GL_TEXTURE0 0x84C0
+#define GL_TEXTURE_CUBE_MAP_POSITIVE_X 0x8515
 
 typedef void (*PFNGLBINDBUFFERPROC)(u32 target, u32 buffer);
 typedef void (*PFNGLBINDVERTEXARRAYPROC)(u32 array);
@@ -113,6 +124,17 @@ typedef void (*PFNGLFRAMEBUFFERTEXTUREPROC)(u32 target, u32 attachment, u32 text
 typedef void (*PFNGLFRAMEBUFFERRENDERBUFFERPROC)(u32 target, u32 attachment, u32 renderbuffertarget, u32 renderbuffer);
 typedef void (*PFNGLRENDERBUFFERSTORAGEPROC)(u32 target, u32 internalformat, int width, int height);
 typedef void (*PFNGLFRAMEBUFFERTEXTURE2DPROC)(u32 target, u32 attachment, u32 textarget, u32 texture, int level);
+typedef void (*PFNGLGETFRAMEBUFFERATTACHMENTPARAMETERIVPROC)(u32 target, u32 attachment, u32 pname, int *params);
+typedef void (*PFNGLDELETERENDERBUFFERSPROC)(int n, const u32 *renderbuffers);
+typedef void (*PFNGLDELETETEXTURESPROC)(int n, const u32 *textures);
+typedef void (*PFNGLDELETEFRAMEBUFFERSPROC)(int n, const u32 *framebuffers);
+typedef void (*PFNGLVIEWPORTPROC)(int x, int y, int width, int height);
+typedef void (*PFNGLUNIFORMMATRIX4FVPROC)(int location, int count, bool transpose, const float *value);
+typedef void (*PFNGLUNIFORM4FPROC)(int location, float v0, float v1, float v2, float v3);
+typedef void (*PFNGLUNIFORM1IPROC)(int location, int v0);
+typedef void (*PFNGLACTIVETEXTUREPROC)(u32 texture);
+typedef void (*PFNGLDRAWELEMENTSPROC)(u32 mode, int count, u32 type, const void *indices);
+typedef void (*PFNGLDRAWARRAYSPROC)(u32 mode, int first, int count);
 
 extern PFNGLBINDBUFFERPROC              glBindBuffer;
 extern PFNGLBINDVERTEXARRAYPROC         glBindVertexArray;
@@ -153,6 +175,7 @@ extern PFNGLTEXIMAGE2DPROC              glTexImage2D;
 extern PFNGLTEXPARAMETERIVPROC          glTexParameteriv;
 extern PFNGLTEXPARAMETERIPROC           glTexParameteri;
 
+// BARU ----
 extern PFNGLGENFRAMEBUFFERSPROC         glGenFramebuffers;
 extern PFNGLBINDFRAMEBUFFERPROC         glBindFramebuffer;
 extern PFNGLGENRENDERBUFFERSPROC        glGenRenderbuffers;
@@ -161,5 +184,16 @@ extern PFNGLFRAMEBUFFERTEXTUREPROC      glFramebufferTexture;
 extern PFNGLFRAMEBUFFERRENDERBUFFERPROC glFramebufferRenderbuffer;
 extern PFNGLRENDERBUFFERSTORAGEPROC     glRenderbufferStorage;
 extern PFNGLFRAMEBUFFERTEXTURE2DPROC    glFramebufferTexture2D;
+extern PFNGLGETFRAMEBUFFERATTACHMENTPARAMETERIVPROC glGetFramebufferAttachmentParameteriv;
+extern PFNGLDELETERENDERBUFFERSPROC     glDeleteRenderbuffers;
+extern PFNGLDELETETEXTURESPROC          glDeleteTextures;
+extern PFNGLDELETEFRAMEBUFFERSPROC      glDeleteFramebuffers;
+extern PFNGLVIEWPORTPROC                glViewport;
+extern PFNGLUNIFORMMATRIX4FVPROC        glUniformMatrix4fv;
+extern PFNGLUNIFORM4FPROC               glUniform4f;
+extern PFNGLUNIFORM1IPROC               glUniform1i;
+extern PFNGLACTIVETEXTUREPROC           glActiveTexture;
+extern PFNGLDRAWELEMENTSPROC            glDrawElements;
+extern PFNGLDRAWARRAYSPROC              glDrawArrays;
 
 #endif

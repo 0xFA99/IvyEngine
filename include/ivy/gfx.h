@@ -84,6 +84,9 @@ extern "C" {
 #ifndef IVY_DEFAULT_BATCH_DRAWCALLS
     #define IVY_DEFAULT_BATCH_DRAWCALLS             256
 #endif
+#ifndef IVY_DEFAULT_BATCH_MAX_TEXTURE_UNITS
+    #define IVY_DEFAULT_BATCH_MAX_TEXTURE_UNITS       4
+#endif
 
 // Misc default defines
 #ifndef IVY_MAX_MATRIX_STACK_SIZE
@@ -93,10 +96,20 @@ extern "C" {
     #define IVY_DEFAULT_BATCH_BUFFERS                 1
 #endif
 
-#define IVY_QUADS                                     0x0007
-
 #define IVY_DEFAULT_BATCH_BUFFER_ELEMENTS  8192
 #define IVY_SHADER_LOC_MAP_DIFFUSE         IVY_SHADER_LOC_MAP_ALBEDO
+
+#define IVY_LINES                                0x0001
+#define IVY_TRIANGLES                            0x0004
+#define IVY_QUADS                                0x0007
+
+#define IVY_MODELVIEW                            0x1700
+#define IVY_PROJECTION                           0x1701
+#define IVY_TEXTURE                              0x1702
+
+// #define GL_LINES 0x0001
+// #define GL_TRIANGLES 0x0004
+// #define GL_QUADS 0x0007
 
 typedef void *(*IvyGLLoadProc)(const char *name);
 
@@ -227,13 +240,13 @@ typedef struct {
     IvyMatrix modelview;
     IvyMatrix projection;
     IvyMatrix transform;
-    // bool transformRequired;
+    bool transformRequired;
     IvyMatrix stack[IVY_MAX_MATRIX_STACK_SIZE];
     // int stackCounter;
 
     u32 currentTextureId;
     u32 defaultTextureId;
-    // u32 activeTextureId[IVY_DEFAULT_BATCH_MAX_TEXTURE_UNITS];
+    u32 activeTextureId[IVY_DEFAULT_BATCH_MAX_TEXTURE_UNITS];
     u32 defaultVShaderId;
     u32 defaultFShaderId;
     u32 defaultShaderId;
@@ -241,9 +254,9 @@ typedef struct {
     int *currentShaderLocs;
     u32 currentShaderId;
 
-    // bool stereoRender;
-    // Matrix projectionStereo[2];
-    // Matrix viewOffsetStereo[2];
+    bool stereoRender;
+    IvyMatrix projectionStereo[2];
+    IvyMatrix viewOffsetStereo[2];
 
     // int currentBlendMode;
     // int glBlendSrcFactor;
@@ -309,7 +322,7 @@ void Ivy_Gfx_SwapBuffers(void);
 
 void Ivy_Gfx_LoadIdentity(void);
 void Ivy_Gfx_MatrixMultiply(float *matrix);
-void Ivy_Gfx_DrawRenderBatchActive(const IvyGLRenderBatch *batch);
+void Ivy_Gfx_DrawRenderBatchActive(void);
 IvyGLRenderBatch Ivy_Gfx_LoadRenderBatch(int numBuffers, int bufferElements);
 
 void Ivy_Gfx_UnloadShaderDefault(void);
@@ -325,7 +338,31 @@ void Ivy_Gfx_DisableFramebuffer(void);
 
 u32 Ivy_Gfx_LoadTextureDepth(int width, int height);
 void Ivy_Gfx_FramebufferAttach(u32 id, u32 texId, int attachType, int texType, int mipLevel);
-u32 Ivy_Gfx_LoadTextureDepth(int width, int height);
+void Ivy_Gfx_UnloadRenderTexture(IvyRenderTexture target);
+void Ivy_Gfx_SetTexture(u32 id);
+void Ivy_Gfx_DrawRenderBatch(IvyGLRenderBatch *batch);
+bool Ivy_Gfx_CheckRenderBatchLimit(int vCount);
+
+void Ivy_Gfx_DrawTexturePro(IvyTexture texture, IvyRectangle src, IvyRectangle dst, IvyVector2 origin, float rotation, IvyColor tint);
+
+void Ivy_Gfx_Begin(int mode);
+void Ivy_Gfx_End(void);
+
+int Ivy_Gfx_GetPixelDataSize(int width, int height, int format);
+void Ivy_Gfx_GetGLTextureFormats(int format, u32 *glInternalFormat, u32 *glFormat, u32 *glType);
+void Ivy_Gfx_BeginTextureMode(IvyRenderTexture target);
+void Ivy_Gfx_UnloadFramebuffer(u32 id);
+void Ivy_Gfx_DrawTextureEx(IvyTexture texture, IvyVector2 position, float rotation, float scale, IvyColor tint);
+void Ivy_Gfx_DrawTexture(IvyTexture texture, int posX, int posY, IvyColor tint);
+void Ivy_Gfx_TextureCoord2F(float x, float y);
+void Ivy_Gfx_Vertex3F(float x, float y, float z);
+void Ivy_Gfx_Vertex2F(float x, float y);
+void Ivy_Gfx_Color4UB(u8 x, u8 y, u8 z, u8 w);
+void Ivy_Gfx_Normal3F(float x, float y, float z);
+
+void Ivy_Gfx_EndTextureMode(void);
+void Ivy_Gfx_MatrixMode(int mode);
+void Ivy_Gfx_Ortho(double left, double right, double bottom, double top, double znear, double zfar);
 
 #ifdef __cplusplus
 }

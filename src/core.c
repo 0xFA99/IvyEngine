@@ -96,6 +96,18 @@ static void Ivy_GL_LoadFunctions(void)
     glFramebufferTexture = (PFNGLFRAMEBUFFERTEXTUREPROC) load("glFramebufferTexture");
     glFramebufferRenderbuffer = (PFNGLFRAMEBUFFERRENDERBUFFERPROC) load("glFramebufferRenderbuffer");
     glRenderbufferStorage = (PFNGLRENDERBUFFERSTORAGEPROC) load("glRenderbufferStorage");
+    glFramebufferTexture2D = (PFNGLFRAMEBUFFERTEXTURE2DPROC) load("glFramebufferTexture2D");
+    glGetFramebufferAttachmentParameteriv = (PFNGLGETFRAMEBUFFERATTACHMENTPARAMETERIVPROC) load("glGetFramebufferAttachmentParameteriv");
+    glDeleteRenderbuffers = (PFNGLDELETERENDERBUFFERSPROC) load("glDeleteRenderbuffers");
+    glDeleteTextures = (PFNGLDELETETEXTURESPROC) load("glDeleteTextures");
+    glDeleteFramebuffers = (PFNGLDELETEFRAMEBUFFERSPROC) load("glDeleteFramebuffers");
+    glViewport = (PFNGLVIEWPORTPROC) load("glViewport");
+    glUniformMatrix4fv = (PFNGLUNIFORMMATRIX4FVPROC) load("glUniformMatrix4fv");
+    glUniform4f = (PFNGLUNIFORM4FPROC) load("glUniform4f");
+    glUniform1i = (PFNGLUNIFORM1IPROC) load("glUniform1i");
+    glActiveTexture = (PFNGLACTIVETEXTUREPROC) load("glActiveTexture");
+    glDrawElements = (PFNGLDRAWELEMENTSPROC) load("glDrawElements");
+    glDrawArrays = (PFNGLDRAWARRAYSPROC) load("glDrawArrays");
 }
 
 static void Ivy_Core_InitPlatform(IvyArenaLinear *arena)

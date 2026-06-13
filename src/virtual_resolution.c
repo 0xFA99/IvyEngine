@@ -12,7 +12,7 @@ IvyVirtualResolution *Ivy_VirtualResolution_Init(IvyArenaLinear *arena, const Iv
     IvyVirtualResolution *virtualRes = Ivy_Arena_LinearAlloc(arena, sizeof(IvyVirtualResolution));
     IVY_ENSURE(virtualRes != NULL);
 
-    virtualRes->target = Ivy_Gfx_LoadRenderTexture(IVY_VIRTUAL_RESOLUTION_WIDTH, IVY_VIRTUAL_RESOLUTION_HEIGHT);
+    virtualRes->target = Ivy_Gfx_LoadRenderTexture(size.x, size.y);
     virtualRes->source = (IvyRectangle) { 0, 0, IVY_VIRTUAL_RESOLUTION_WIDTH, IVY_VIRTUAL_RESOLUTION_HEIGHT};
 
     Ivy_VirtualResolution_Update(virtualRes, size);
@@ -43,7 +43,7 @@ void Ivy_VirtualResolution_Update(IvyVirtualResolution *virtualRes, const IvyVec
 void Ivy_VirtualResolution_Draw(const IvyVirtualResolution *virtualRes)
 {
     IVY_ASSERT(virtualRes != NULL, "[WARNING] [VirtualResolution] is NULL!");
-    // TODO: Ivy_Gfx_DrawTexture();
+    Ivy_Gfx_DrawTexturePro(virtualRes->target.texture, virtualRes->source, virtualRes->destination, (IvyVector2){0}, 0.0f, (IvyColor){ 255, 255, 255, 255 });
 }
 
 void Ivy_VirtualResolution_Unload(const IvyVirtualResolution *virtualRes)
@@ -51,6 +51,6 @@ void Ivy_VirtualResolution_Unload(const IvyVirtualResolution *virtualRes)
     IVY_ASSERT(virtualRes != NULL, "[WARNING] [VirtualResolution] is NULL!");
 
     if (IVY_LIKELY(virtualRes != NULL)) {
-        // TODO: Ivy_Gfx_UnloadRenderTexture(virtualRes->target);
+        Ivy_Gfx_UnloadRenderTexture(virtualRes->target);
     }
 }

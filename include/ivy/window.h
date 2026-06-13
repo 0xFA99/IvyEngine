@@ -19,11 +19,14 @@ typedef struct {
     bool        shouldClose;
     bool        resizedLastFrame;
     bool        eventWaiting;
+    bool        usingFBO;
 
     IvySize     display;
     IvySize     screen;
     IvySize     render;
     IvySize     currentFBO;
+
+    IvyPoint    renderOffset;
 
     IvyPoint    position;
     IvySize     prevScreen;
