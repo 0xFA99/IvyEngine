@@ -3,7 +3,6 @@
 
 #include "ivy/types.h"
 #include "ivy/math.h"
-#include "ivy/glfw_loader.h"
 
 #include <stdbool.h>
 
@@ -33,6 +32,8 @@ typedef struct {
     IvyPoint    prevPosition;
 
     IvyMatrix   screenScale;
+
+    u32         msaaResolveFBO;
 } IvyWindow;
 
 bool        Ivy_Window_ShouldClose(void);
@@ -44,14 +45,7 @@ void        Ivy_Window_ToggleFullscreen(void);
 void        Ivy_Window_ToggleBorderlessWindow(void);
 IvyVector2  Ivy_Window_GetWindowScaleDPI(void);
 int         Ivy_Window_GetCurrentMonitor(void);
-
-void Ivy_Window_SizeCallback(GLFWwindow *window, int width, int height);
-void Ivy_Window_FramebufferSizeCallback(GLFWwindow *window, int width, int height);
-void Ivy_Window_ContentScaleCallback(GLFWwindow *window, float scaleX, float scaleY);
-void Ivy_Window_PosCallback(GLFWwindow *window, int x, int y);
-void Ivy_Window_IconifyCallback(GLFWwindow *window, int iconified);
-void Ivy_Window_MaximizeCallback(GLFWwindow *window, int maximized);
-void Ivy_Window_FocusCallback(GLFWwindow *window, int focused);
+bool        Ivy_Window_IsResized(void);
 
 #ifdef __cplusplus
 }

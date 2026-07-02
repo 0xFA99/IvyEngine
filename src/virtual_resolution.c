@@ -1,6 +1,6 @@
 #include "ivy/virtual_resolution.h"
-
 #include "ivy/arena/linear.h"
+#include "ivy/core.h"
 
 #define IVY_INVERSE_VIRTUAL_RESOLUTION_WIDTH  (1.0f / IVY_VIRTUAL_RESOLUTION_WIDTH)
 #define IVY_INVERSE_VIRTUAL_RESOLUTION_HEIGHT (1.0f / IVY_VIRTUAL_RESOLUTION_HEIGHT)
@@ -8,12 +8,14 @@
 IvyVirtualResolution *Ivy_VirtualResolution_Init(IvyArenaLinear *arena, const IvyVector2 size)
 {
     IVY_ASSERT(arena != NULL, "[WARNING] [Arena] is NULL!");
+    extern IvyCoreData IVY_CORE;
 
     IvyVirtualResolution *virtualRes = Ivy_Arena_LinearAlloc(arena, sizeof(IvyVirtualResolution));
     IVY_ENSURE(virtualRes != NULL);
 
-    virtualRes->target = Ivy_Gfx_LoadRenderTexture(size.x, size.y);
-    virtualRes->source = (IvyRectangle) { 0, 0, IVY_VIRTUAL_RESOLUTION_WIDTH, IVY_VIRTUAL_RESOLUTION_HEIGHT};
+    virtualRes->target = Ivy_Gfx_LoadRenderTexture((int)IVY_VIRTUAL_RESOLUTION_WIDTH, (int)IVY_VIRTUAL_RESOLUTION_HEIGHT);
+
+    virtualRes->source = (IvyRectangle) { 0, 0, IVY_VIRTUAL_RESOLUTION_WIDTH, -IVY_VIRTUAL_RESOLUTION_HEIGHT};
 
     Ivy_VirtualResolution_Update(virtualRes, size);
 

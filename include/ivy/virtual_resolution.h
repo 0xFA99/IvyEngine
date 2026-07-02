@@ -14,12 +14,12 @@ extern "C" {
 #define IVY_VIRTUAL_RESOLUTION_HEIGHT 360.0f
 
 struct IvyVirtualResolution {
-    IvyRenderTexture    target;         // 44
-    IvyRectangle        source;         // 16
-    IvyRectangle        destination;    // 16
-    float               scale;          // 4
-};                                      // (80)
-IVY_ASSERT_STATIC(sizeof(IvyVirtualResolution) == 80, "[ERROR] [IvyVirtualResolution] Size must be 80 bytes!");
+    IvyRenderTexture    target;
+    IvyRectangle        source;
+    IvyRectangle        destination;
+    float               scale;
+};
+IVY_ASSERT_STATIC(sizeof(IvyVirtualResolution) == 88, "[ERROR] [IvyVirtualResolution] Size must be 88 bytes!");
 
 IvyVirtualResolution *Ivy_VirtualResolution_Init(IvyArenaLinear *arena, IvyVector2 size);
 void Ivy_VirtualResolution_Update(IvyVirtualResolution *virtualRes, IvyVector2 size);

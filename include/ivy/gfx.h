@@ -38,7 +38,6 @@ extern "C" {
     #define IVY_DEFAULT_SHADER_ATTRIB_NAME_INSTANCETRANSFORM "instanceTransform"
 #endif
 
-// shader uniform/sampler
 #ifndef IVY_DEFAULT_SHADER_UNIFORM_NAME_MVP
     #define IVY_DEFAULT_SHADER_UNIFORM_NAME_MVP         "mvp"
 #endif
@@ -49,7 +48,6 @@ extern "C" {
     #define IVY_DEFAULT_SHADER_SAMPLER2D_NAME_TEXTURE0  "texture0"
 #endif
 
-// shader attribute locations
 #ifndef IVY_DEFAULT_SHADER_ATTRIB_LOCATION_POSITION
     #define IVY_DEFAULT_SHADER_ATTRIB_LOCATION_POSITION             0
 #endif
@@ -88,7 +86,6 @@ extern "C" {
     #define IVY_DEFAULT_BATCH_MAX_TEXTURE_UNITS       4
 #endif
 
-// Misc default defines
 #ifndef IVY_MAX_MATRIX_STACK_SIZE
     #define IVY_MAX_MATRIX_STACK_SIZE                32
 #endif
@@ -106,10 +103,6 @@ extern "C" {
 #define IVY_MODELVIEW                            0x1700
 #define IVY_PROJECTION                           0x1701
 #define IVY_TEXTURE                              0x1702
-
-// #define GL_LINES 0x0001
-// #define GL_TRIANGLES 0x0004
-// #define GL_QUADS 0x0007
 
 typedef void *(*IvyGLLoadProc)(const char *name);
 
@@ -179,6 +172,15 @@ typedef enum {
 } IvyPixelFormat;
 
 typedef enum {
+    IVY_TEXTURE_FILTER_POINT = 0,
+    IVY_TEXTURE_FILTER_BILINEAR,
+    IVY_TEXTURE_FILTER_TRILINEAR,
+    IVY_TEXTURE_FILTER_ANISOTROPIC_4X,
+    IVY_TEXTURE_FILTER_ANISOTROPIC_8X,
+    IVY_TEXTURE_FILTER_ANISOTROPIC_16X,
+} IvyTextureFilter;
+
+typedef enum {
     IVY_ATTACHMENT_COLOR_CHANNEL0 = 0,
     IVY_ATTACHMENT_COLOR_CHANNEL1 = 1,
     IVY_ATTACHMENT_COLOR_CHANNEL2 = 2,
@@ -242,7 +244,6 @@ typedef struct {
     IvyMatrix transform;
     bool transformRequired;
     IvyMatrix stack[IVY_MAX_MATRIX_STACK_SIZE];
-    // int stackCounter;
 
     u32 currentTextureId;
     u32 defaultTextureId;
@@ -257,18 +258,6 @@ typedef struct {
     bool stereoRender;
     IvyMatrix projectionStereo[2];
     IvyMatrix viewOffsetStereo[2];
-
-    // int currentBlendMode;
-    // int glBlendSrcFactor;
-    // int glBlendDstFactor;
-    // int glBlendEquation;
-    // int glBlendSrcFactorRGB;
-    // int glBlendDestFactorRGB;
-    // int glBlendSrcFactorAlpha;
-    // int glBlendDestFactorAlpha;
-    // int glBlendEquationRGB;
-    // int glBlendEquationAlpha;
-    // bool glCustomBlendModeModified;
 
     int framebufferWidth;
     int framebufferHeight;
@@ -310,6 +299,8 @@ typedef struct {
 
 typedef struct {
     u32 id;
+    u32 msaaId;
+    u32 msaaColorId;
     IvyTexture texture;
     IvyTexture depth;
 } IvyRenderTexture;
@@ -337,9 +328,12 @@ void Ivy_Gfx_EnableFramebuffer(u32 id);
 void Ivy_Gfx_DisableFramebuffer(void);
 
 u32 Ivy_Gfx_LoadTextureDepth(int width, int height);
+u32 Ivy_Gfx_LoadTextureDepthMultisample(int width, int height, int samples);
+u32 Ivy_Gfx_LoadColorRenderbufferMultisample(int width, int height, int samples);
 void Ivy_Gfx_FramebufferAttach(u32 id, u32 texId, int attachType, int texType, int mipLevel);
 void Ivy_Gfx_UnloadRenderTexture(IvyRenderTexture target);
 void Ivy_Gfx_SetTexture(u32 id);
+void Ivy_Gfx_SetTextureFilter(IvyTexture texture, int filter);
 void Ivy_Gfx_DrawRenderBatch(IvyGLRenderBatch *batch);
 bool Ivy_Gfx_CheckRenderBatchLimit(int vCount);
 
@@ -363,6 +357,7 @@ void Ivy_Gfx_Normal3F(float x, float y, float z);
 void Ivy_Gfx_EndTextureMode(void);
 void Ivy_Gfx_MatrixMode(int mode);
 void Ivy_Gfx_Ortho(double left, double right, double bottom, double top, double znear, double zfar);
+IvyMatrix Ivy_Gfx_GetMatrixTransform(void);
 
 #ifdef __cplusplus
 }
