@@ -9,7 +9,7 @@
 extern "C" {
 #endif
 
-#define LINEAR_DEFAULT_ALIGNMENT    16 // 8 / 16 / 32 / 64 Sheesshhhhh!!!!
+#define LINEAR_DEFAULT_ALIGNMENT    16
 #define LINEAR_DEFAULT_CAPACITY     (1024 * 1024)
 
 IVY_INLINE bool Ivy_Arena_IsPowerOfTwo(const usize x)

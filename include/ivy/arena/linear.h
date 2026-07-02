@@ -17,17 +17,17 @@ extern "C" {
 #endif
 
 struct IvyArenaLinear {
-    u8      *buffer;        // 8
-    usize    capacity;      // 8
-    usize    offset;        // 8
-    bool     owned;         // 1
-    u8       padding[7];    // 7
-};                          // 32
+    u8      *buffer;
+    usize    capacity;
+    usize    offset;
+    bool     owned;
+    u8       padding[7];
+};
 IVY_ASSERT_STATIC(sizeof(IvyArenaLinear) == 32, "[Arena](Linear) Size must be 32 bytes!");
 
 struct IvyArenaLinearSnapshot {
-    usize    offset;        // 8
-};                          // 8
+    usize    offset;
+};
 IVY_ASSERT_STATIC(sizeof(IvyArenaLinearSnapshot) == 8, "[Arena](Linear) Snapshot size must be 8 bytes!");
 
 void                    Ivy_Arena_LinearInit(IvyArenaLinear *arena, usize capacity);
@@ -49,17 +49,15 @@ IVY_INLINE void *Ivy_Arena_LinearAllocAlign(IvyArenaLinear *arena, const usize s
 
     if (IVY_UNLIKELY(size == 0)) return NULL;
 
-    // bump the offset forward to meet alignment.
     const usize aligned_offset = Ivy_Arena_AlignForward(arena->offset, align);
 
-    // OOM: not enough contiguous space left.
     if (IVY_UNLIKELY(aligned_offset + size > arena->capacity)) {
         IVY_ASSERT(false, "[Arena] OOM! Req: %zu, Cap: %zu", aligned_offset + size, arena->capacity);
         return NULL;
     }
 
     void *ptr = arena->buffer + aligned_offset;
-    arena->offset = aligned_offset + size;  // commit the bump.
+    arena->offset = aligned_offset + size;
 
     return ptr;
 }

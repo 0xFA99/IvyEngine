@@ -32,7 +32,6 @@ typedef enum {
 typedef enum {
     IVY_KEY_NULL = 0,
 
-    // Printable
     IVY_KEY_SPACE          = 32,
     IVY_KEY_APOSTROPHE     = 39,
     IVY_KEY_COMMA          = 44,
@@ -82,7 +81,6 @@ typedef enum {
     IVY_KEY_RIGHT_BRACKET  = 93,
     IVY_KEY_GRAVE          = 96,
 
-    // Function / control
     IVY_KEY_ESCAPE         = 256,
     IVY_KEY_ENTER          = 257,
     IVY_KEY_TAB            = 258,
@@ -124,7 +122,6 @@ typedef enum {
     IVY_KEY_RIGHT_SUPER    = 347,
     IVY_KEY_KB_MENU        = 348,
 
-    // Keypad
     IVY_KEY_KP_0           = 320,
     IVY_KEY_KP_1           = 321,
     IVY_KEY_KP_2           = 322,
@@ -145,7 +142,7 @@ typedef enum {
 } IvyKeyboardKey;
 
 typedef struct {
-    GLFWwindow *handle;
+    void *handle;
 } IvyPlatformData;
 
 typedef struct {

@@ -67,8 +67,8 @@ float Ivy_Math_SinF(float x)
     if (x < -IVY_MATH_PI) x += 2.0f * IVY_MATH_PI;
     else if (x > IVY_MATH_PI) x -= 2.0f * IVY_MATH_PI;
 
-    const float y = 1.27323954f * x;        // 4 / PI
-    const float z = 0.405284735f * x * x;   // 4 / (PI * PI)
+    const float y = 1.27323954f * x;
+    const float z = 0.405284735f * x * x;
     const float q = (x < 0.0f) ? (y + z) : (y - z);
 
     return 0.225f * (q * ((q < 0.0f) ? -q : q) - q) + q;
@@ -76,7 +76,7 @@ float Ivy_Math_SinF(float x)
 
 float Ivy_Math_CosF(float x)
 {
-    x += 1.57079632f; // IVY_MATH_PI / 2
+    x += 1.57079632f;
 
     if (x > IVY_MATH_PI) x -= 2.0f * IVY_MATH_PI;
 
@@ -111,7 +111,6 @@ IvyMatrix Ivy_Math_MatrixInvert(IvyMatrix mat)
 {
     IvyMatrix result = { 0 };
 
-    // Cache the matrix values (speed optimization)
     float a00 = mat.m0, a01 = mat.m1, a02 = mat.m2, a03 = mat.m3;
     float a10 = mat.m4, a11 = mat.m5, a12 = mat.m6, a13 = mat.m7;
     float a20 = mat.m8, a21 = mat.m9, a22 = mat.m10, a23 = mat.m11;
@@ -130,7 +129,6 @@ IvyMatrix Ivy_Math_MatrixInvert(IvyMatrix mat)
     float b10 = a21*a33 - a23*a31;
     float b11 = a22*a33 - a23*a32;
 
-    // Calculate the invert determinant (inlined to avoid double-caching)
     float invDet = 1.0f/(b00*b11 - b01*b10 + b02*b09 + b03*b08 - b04*b07 + b05*b06);
 
     result.m0 = (a11*b11 - a12*b10 + a13*b09)*invDet;

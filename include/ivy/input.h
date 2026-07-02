@@ -56,10 +56,6 @@ typedef struct {
     IvyMouse    mouse;
 } IvyInput;
 
-void Ivy_Input_KeyCallback(GLFWwindow *window, int key, int scancode, int action, int mods);
-void Ivy_Input_MouseButtonCallback(GLFWwindow *window, int button, int action, int mods);
-void Ivy_Input_CursorPosCallback(GLFWwindow *window, double x, double y);
-
 void Ivy_Input_PoolEvents(void);
 
 #ifdef __cplusplus
