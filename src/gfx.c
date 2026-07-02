@@ -1,10 +1,84 @@
 #include "ivy/core.h"
 #include "ivy/gfx.h"
 #include "ivy/math.h"
+#include "ivy/platform.h"
 
+#include <stddef.h>
+#include <stdio.h>
 #include "ivy/arena/linear.h"
-#include "ivy/glad_loader.h"
-#include "ivy/glfw_loader.h"
+
+#define IVY_GL_IMPLEMENTATION
+#include "ivy/gl.h"
+
+bool Ivy_GL_LoadProcs(IvyGLLoadProc loader)
+{
+    ivy_glActiveTexture = (PFNGLACTIVETEXTUREPROC)loader("glActiveTexture");
+    ivy_glAttachShader = (PFNGLATTACHSHADERPROC)loader("glAttachShader");
+    ivy_glBindAttribLocation = (PFNGLBINDATTRIBLOCATIONPROC)loader("glBindAttribLocation");
+    ivy_glBindBuffer = (PFNGLBINDBUFFERPROC)loader("glBindBuffer");
+    ivy_glBindFramebuffer = (PFNGLBINDFRAMEBUFFERPROC)loader("glBindFramebuffer");
+    ivy_glBindRenderbuffer = (PFNGLBINDRENDERBUFFERPROC)loader("glBindRenderbuffer");
+    ivy_glBindVertexArray = (PFNGLBINDVERTEXARRAYPROC)loader("glBindVertexArray");
+    ivy_glBufferData = (PFNGLBUFFERDATAPROC)loader("glBufferData");
+    ivy_glBufferSubData = (PFNGLBUFFERSUBDATAPROC)loader("glBufferSubData");
+    ivy_glCompileShader = (PFNGLCOMPILESHADERPROC)loader("glCompileShader");
+    ivy_glCreateProgram = (PFNGLCREATEPROGRAMPROC)loader("glCreateProgram");
+    ivy_glCreateShader = (PFNGLCREATESHADERPROC)loader("glCreateShader");
+    ivy_glDeleteFramebuffers = (PFNGLDELETEFRAMEBUFFERSPROC)loader("glDeleteFramebuffers");
+    ivy_glDeleteProgram = (PFNGLDELETEPROGRAMPROC)loader("glDeleteProgram");
+    ivy_glDeleteRenderbuffers = (PFNGLDELETERENDERBUFFERSPROC)loader("glDeleteRenderbuffers");
+    ivy_glDeleteShader = (PFNGLDELETESHADERPROC)loader("glDeleteShader");
+    ivy_glDetachShader = (PFNGLDETACHSHADERPROC)loader("glDetachShader");
+    ivy_glEnableVertexAttribArray = (PFNGLENABLEVERTEXATTRIBARRAYPROC)loader("glEnableVertexAttribArray");
+    ivy_glFramebufferRenderbuffer = (PFNGLFRAMEBUFFERRENDERBUFFERPROC)loader("glFramebufferRenderbuffer");
+    ivy_glFramebufferTexture2D = (PFNGLFRAMEBUFFERTEXTURE2DPROC)loader("glFramebufferTexture2D");
+    ivy_glGenBuffers = (PFNGLGENBUFFERSPROC)loader("glGenBuffers");
+    ivy_glGenFramebuffers = (PFNGLGENFRAMEBUFFERSPROC)loader("glGenFramebuffers");
+    ivy_glGenRenderbuffers = (PFNGLGENRENDERBUFFERSPROC)loader("glGenRenderbuffers");
+    ivy_glGenVertexArrays = (PFNGLGENVERTEXARRAYSPROC)loader("glGenVertexArrays");
+    ivy_glGetAttribLocation = (PFNGLGETATTRIBLOCATIONPROC)loader("glGetAttribLocation");
+    ivy_glCheckFramebufferStatus = (PFNGLCHECKFRAMEBUFFERSTATUSPROC)loader("glCheckFramebufferStatus");
+    ivy_glGetFramebufferAttachmentParameteriv = (PFNGLGETFRAMEBUFFERATTACHMENTPARAMETERIVPROC)loader("glGetFramebufferAttachmentParameteriv");
+    ivy_glGetProgramInfoLog = (PFNGLGETPROGRAMINFOLOGPROC)loader("glGetProgramInfoLog");
+    ivy_glGetProgramiv = (PFNGLGETPROGRAMIVPROC)loader("glGetProgramiv");
+    ivy_glGetShaderInfoLog = (PFNGLGETSHADERINFOLOGPROC)loader("glGetShaderInfoLog");
+    ivy_glGetShaderiv = (PFNGLGETSHADERIVPROC)loader("glGetShaderiv");
+    ivy_glGetUniformLocation = (PFNGLGETUNIFORMLOCATIONPROC)loader("glGetUniformLocation");
+    ivy_glLinkProgram = (PFNGLLINKPROGRAMPROC)loader("glLinkProgram");
+    ivy_glRenderbufferStorage = (PFNGLRENDERBUFFERSTORAGEPROC)loader("glRenderbufferStorage");
+    ivy_glRenderbufferStorageMultisample = (PFNGLRENDERBUFFERSTORAGEMULTISAMPLEPROC)loader("glRenderbufferStorageMultisample");
+    ivy_glBlitFramebuffer = (PFNGLBLITFRAMEBUFFERPROC)loader("glBlitFramebuffer");
+    ivy_glGetIntegerv = (PFNGLGETINTEGERVPROC)loader("glGetIntegerv");
+    ivy_glShaderSource = (PFNGLSHADERSOURCEPROC)loader("glShaderSource");
+    ivy_glUniform1i = (PFNGLUNIFORM1IPROC)loader("glUniform1i");
+    ivy_glUniform4f = (PFNGLUNIFORM4FPROC)loader("glUniform4f");
+    ivy_glUniformMatrix4fv = (PFNGLUNIFORMMATRIX4FVPROC)loader("glUniformMatrix4fv");
+    ivy_glUseProgram = (PFNGLUSEPROGRAMPROC)loader("glUseProgram");
+    ivy_glVertexAttribPointer = (PFNGLVERTEXATTRIBPOINTERPROC)loader("glVertexAttribPointer");
+
+    ivy_glViewport = (PFNGLVIEWPORTPROC)loader("glViewport");
+    ivy_glGetError = (PFNGLGETERRORPROC)loader("glGetError");
+    ivy_glDepthFunc = (PFNGLDEPTHFUNCPROC)loader("glDepthFunc");
+    ivy_glDisable = (PFNGLDISABLEPROC)loader("glDisable");
+    ivy_glBlendFunc = (PFNGLBLENDFUNCPROC)loader("glBlendFunc");
+    ivy_glEnable = (PFNGLENABLEPROC)loader("glEnable");
+    ivy_glCullFace = (PFNGLCULLFACEPROC)loader("glCullFace");
+    ivy_glFrontFace = (PFNGLFRONTFACEPROC)loader("glFrontFace");
+    ivy_glClearColor = (PFNGLCLEARCOLORPROC)loader("glClearColor");
+    ivy_glClearDepth = (PFNGLCLEARDEPTHPROC)loader("glClearDepth");
+    ivy_glClear = (PFNGLCLEARPROC)loader("glClear");
+    ivy_glBindTexture = (PFNGLBINDTEXTUREPROC)loader("glBindTexture");
+    ivy_glPixelStorei = (PFNGLPIXELSTOREIPROC)loader("glPixelStorei");
+    ivy_glGenTextures = (PFNGLGENTEXTURESPROC)loader("glGenTextures");
+    ivy_glTexImage2D = (PFNGLTEXIMAGE2DPROC)loader("glTexImage2D");
+    ivy_glTexParameteri = (PFNGLTEXPARAMETERIPROC)loader("glTexParameteri");
+    ivy_glDeleteTextures = (PFNGLDELETETEXTURESPROC)loader("glDeleteTextures");
+    ivy_glDrawArrays = (PFNGLDRAWARRAYSPROC)loader("glDrawArrays");
+    ivy_glDrawElements = (PFNGLDRAWELEMENTSPROC)loader("glDrawElements");
+    ivy_glReadPixels = (PFNGLREADPIXELSPROC)loader("glReadPixels");
+
+    return true;
+}
 
 extern IvyCoreData     IVY_CORE;
 extern IvyPlatformData IVY_PLATFORM;
@@ -21,7 +95,7 @@ static void SetupViewport(int width, int height)
     Ivy_Gfx_MatrixMode(IVY_PROJECTION);
     Ivy_Gfx_LoadIdentity();
 
-    Ivy_Gfx_Ortho(0, IVY_CORE.window.render.width, IVY_CORE.window.render.height, 0, 0.0f, 1.0f);
+    Ivy_Gfx_Ortho(0, IVY_CORE.window.render.width, IVY_CORE.window.render.height, 0, -10.0f, 10.0f);
 
     Ivy_Gfx_MatrixMode(IVY_MODELVIEW);
     Ivy_Gfx_LoadIdentity();
@@ -29,6 +103,19 @@ static void SetupViewport(int width, int height)
 
 void Ivy_Gfx_Init(const int width, const int height)
 {
+    Ivy_GL_LoadProcs(Ivy_Platform_GetProcAddress);
+
+    if (!ivy_glActiveTexture) printf("[DIAG WARNING] glActiveTexture is NULL\n");
+    if (!ivy_glBindVertexArray) printf("[DIAG WARNING] glBindVertexArray is NULL\n");
+    if (!ivy_glGenVertexArrays) printf("[DIAG WARNING] glGenVertexArrays is NULL\n");
+    if (!ivy_glBufferData) printf("[DIAG WARNING] glBufferData is NULL\n");
+    if (!ivy_glBufferSubData) printf("[DIAG WARNING] glBufferSubData is NULL\n");
+    if (!ivy_glDrawArrays) printf("[DIAG WARNING] glDrawArrays is NULL\n");
+    if (!ivy_glDrawElements) printf("[DIAG WARNING] glDrawElements is NULL\n");
+    if (!ivy_glUseProgram) printf("[DIAG WARNING] glUseProgram is NULL\n");
+
+    IVY_GL.extSupported.vao = true;
+
     const u8 pixels[4] = { 255, 255, 255, 255 };
 
     IVY_GL.state.defaultTextureId = Ivy_Gfx_LoadTextureId(pixels, 1, 1, IVY_PIXELFORMAT_UNCOMPRESSED_R8G8B8A8, 1);
@@ -54,6 +141,11 @@ void Ivy_Gfx_Init(const int width, const int height)
     IVY_GL.state.modelview  = Ivy_Math_MatrixIdentity();
     IVY_GL.state.currentMatrix = &IVY_GL.state.modelview;
 
+    GLenum err;
+    while ((err = glGetError()) != GL_NO_ERROR) {
+        fprintf(stderr, "[GL ERROR during Init]: 0x%04X\n", err);
+    }
+
     glDepthFunc(GL_LEQUAL);
     glDisable(GL_DEPTH_TEST);
 
@@ -62,16 +154,21 @@ void Ivy_Gfx_Init(const int width, const int height)
 
     glCullFace(GL_BACK);
     glFrontFace(GL_CCW);
-    glEnable(GL_CULL_FACE);
+    glDisable(GL_CULL_FACE);
 
     glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS);
+    if (IVY_CORE.window.flags & IVY_FLAG_MSAA_4X_HINT) {
+        glEnable(GL_MULTISAMPLE);
+    }
 
     IVY_GL.state.framebufferWidth = width;
     IVY_GL.state.framebufferHeight = height;
 
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-    glClearDepth(1.0f);
+    glClearDepth(1.0);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    SetupViewport(width, height);
 }
 
 void Ivy_Gfx_BeginDrawing(void)
@@ -95,7 +192,7 @@ void Ivy_Gfx_EndDrawing(void)
     IVY_CORE.time.frame   = IVY_CORE.time.update + IVY_CORE.time.draw;
 
     if (IVY_CORE.time.target > 0.0 && IVY_CORE.time.frame < IVY_CORE.time.target) {
-        // TODO: platform sleep for the remaining budget
+
         IVY_CORE.time.current = Ivy_Core_GetTime();
         IVY_CORE.time.frame  += IVY_CORE.time.current - IVY_CORE.time.prev;
         IVY_CORE.time.prev    = IVY_CORE.time.current;
@@ -121,8 +218,7 @@ void Ivy_Gfx_ClearBackground(const IvyColor color)
 
 void Ivy_Gfx_SwapBuffers(void)
 {
-    glfwSwapBuffers(IVY_PLATFORM.handle);
-    glfwPollEvents();
+    Ivy_Platform_SwapBuffers();
 }
 
 void Ivy_Gfx_LoadIdentity(void)
@@ -191,7 +287,6 @@ IvyGLRenderBatch Ivy_Gfx_LoadRenderBatch(const int numBuffers, const int bufferE
         IVY_GL.state.vertexCounter = 0;
     }
 
-    // Setup VAO / VBO
     for (int i = 0; i < numBuffers; i++)
     {
         if (IVY_GL.extSupported.vao) {
@@ -205,28 +300,24 @@ IvyGLRenderBatch Ivy_Gfx_LoadRenderBatch(const int numBuffers, const int bufferE
         glEnableVertexAttribArray(IVY_GL.state.currentShaderLocs[IVY_SHADER_LOC_VERTEX_POSITION]);
         glVertexAttribPointer(IVY_GL.state.currentShaderLocs[IVY_SHADER_LOC_VERTEX_POSITION], 3, GL_FLOAT, 0, 0, 0);
 
-        // Vertex texCoord buffer
         glGenBuffers(1, &batch.vertexBuffer[i].vboId[1]);
         glBindBuffer(GL_ARRAY_BUFFER, batch.vertexBuffer[i].vboId[1]);
         glBufferData(GL_ARRAY_BUFFER, (ptrdiff_t)(bufferElements * 2 * 4 * sizeof(float)), batch.vertexBuffer[i].texCoords, GL_DYNAMIC_DRAW);
         glEnableVertexAttribArray(IVY_GL.state.currentShaderLocs[IVY_SHADER_LOC_VERTEX_TEXCOORD01]);
         glVertexAttribPointer(IVY_GL.state.currentShaderLocs[IVY_SHADER_LOC_VERTEX_TEXCOORD01], 2, GL_FLOAT, 0, 0, 0);
 
-        // Vertex normal buffer
         glGenBuffers(1, &batch.vertexBuffer[i].vboId[2]);
         glBindBuffer(GL_ARRAY_BUFFER, batch.vertexBuffer[i].vboId[2]);
         glBufferData(GL_ARRAY_BUFFER, (ptrdiff_t)(bufferElements * 3 * 4 * sizeof(float)), batch.vertexBuffer[i].normals, GL_DYNAMIC_DRAW);
         glEnableVertexAttribArray(IVY_GL.state.currentShaderLocs[IVY_SHADER_LOC_VERTEX_NORMAL]);
         glVertexAttribPointer(IVY_GL.state.currentShaderLocs[IVY_SHADER_LOC_VERTEX_NORMAL], 3, GL_FLOAT, 0, 0, 0);
 
-        // Vertex color buffer
         glGenBuffers(1, &batch.vertexBuffer[i].vboId[3]);
         glBindBuffer(GL_ARRAY_BUFFER, batch.vertexBuffer[i].vboId[3]);
         glBufferData(GL_ARRAY_BUFFER, (ptrdiff_t)(bufferElements * 4 * 4 * sizeof(unsigned char)), batch.vertexBuffer[i].colors, GL_DYNAMIC_DRAW);
         glEnableVertexAttribArray(IVY_GL.state.currentShaderLocs[IVY_SHADER_LOC_VERTEX_COLOR]);
         glVertexAttribPointer(IVY_GL.state.currentShaderLocs[IVY_SHADER_LOC_VERTEX_COLOR], 4, GL_UNSIGNED_BYTE, true, 0, 0);
 
-        // Index buffer
         glGenBuffers(1, &batch.vertexBuffer[i].vboId[4]);
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, batch.vertexBuffer[i].vboId[4]);
         glBufferData(GL_ELEMENT_ARRAY_BUFFER, (ptrdiff_t)(bufferElements * 6 * sizeof(int)), batch.vertexBuffer[i].indices, GL_STATIC_DRAW);
@@ -241,7 +332,7 @@ IvyGLRenderBatch Ivy_Gfx_LoadRenderBatch(const int numBuffers, const int bufferE
         batch.draws[i].mode = IVY_QUADS;
         batch.draws[i].vertexCount = 0;
         batch.draws[i].vertexAlignment = 0;
-        batch.draws[i].textureId = IVY_GL.state.defaultShaderId;
+        batch.draws[i].textureId = IVY_GL.state.defaultTextureId;
     }
 
     batch.bufferCount = numBuffers;
@@ -266,13 +357,15 @@ void Ivy_Gfx_UnloadShaderDefault(void)
 void Ivy_Gfx_LoadShaderDefault(void)
 {
     IVY_GL.state.defaultShaderLocs = (int *)Ivy_Arena_LinearAlloc(IVY_CORE.arena, IVY_MAX_SHADER_LOCATIONS * sizeof(int));
-    memset(IVY_GL.state.defaultShaderLocs, 0, IVY_MAX_SHADER_LOCATIONS * sizeof(int));
+    for (int i = 0; i < IVY_MAX_SHADER_LOCATIONS; i++) {
+        IVY_GL.state.defaultShaderLocs[i] = -1;
+    }
 
     const char *defaultVShaderCode =
-        "#version 330                       \n"
-        "in vec3 vertexPosition;            \n"
-        "in vec2 vertexTexCoord;            \n"
-        "in vec4 vertexColor;               \n"
+        "#version 330 core                  \n"
+        "layout(location = 0) in vec3 vertexPosition;  \n"
+        "layout(location = 1) in vec2 vertexTexCoord;  \n"
+        "layout(location = 3) in vec4 vertexColor;     \n"
         "out vec2 fragTexCoord;             \n"
         "out vec4 fragColor;                \n"
         "uniform mat4 mvp;                  \n"
@@ -280,11 +373,11 @@ void Ivy_Gfx_LoadShaderDefault(void)
         "{                                  \n"
         "    fragTexCoord = vertexTexCoord; \n"
         "    fragColor = vertexColor;       \n"
-        "    gl_Position = mvp*vec4(vertexPosition, 1.0); \n"
+        "    gl_Position = mvp * vec4(vertexPosition, 1.0); \n"
         "}                                  \n";
 
     const char *defaultFShaderCode =
-        "#version 330       \n"
+        "#version 330 core                  \n"
         "in vec2 fragTexCoord;              \n"
         "in vec4 fragColor;                 \n"
         "out vec4 finalColor;               \n"
@@ -292,13 +385,15 @@ void Ivy_Gfx_LoadShaderDefault(void)
         "uniform vec4 colDiffuse;           \n"
         "void main()                        \n"
         "{                                  \n"
-        "    vec4 texelColor = texture(texture0, fragTexCoord);   \n"
-        "    finalColor = texelColor*colDiffuse*fragColor;        \n"
+        "    finalColor = texture(texture0, fragTexCoord) * colDiffuse * fragColor; \n"
         "}                                  \n";
 
     IVY_GL.state.defaultVShaderId = Ivy_Gfx_LoadShader(defaultVShaderCode, GL_VERTEX_SHADER);
     IVY_GL.state.defaultFShaderId = Ivy_Gfx_LoadShader(defaultFShaderCode, GL_FRAGMENT_SHADER);
     IVY_GL.state.defaultShaderId = Ivy_Gfx_LoadShaderProgramEx(IVY_GL.state.defaultVShaderId, IVY_GL.state.defaultFShaderId);
+
+    printf("[DIAG] Shaders: VS=%u, FS=%u, Prog=%u\n",
+           IVY_GL.state.defaultVShaderId, IVY_GL.state.defaultFShaderId, IVY_GL.state.defaultShaderId);
 
     if (IVY_LIKELY(IVY_GL.state.defaultShaderId > 0)) {
         IVY_GL.state.defaultShaderLocs[IVY_SHADER_LOC_VERTEX_POSITION] = glGetAttribLocation(IVY_GL.state.defaultShaderId, IVY_DEFAULT_SHADER_ATTRIB_NAME_POSITION);
@@ -308,6 +403,14 @@ void Ivy_Gfx_LoadShaderDefault(void)
         IVY_GL.state.defaultShaderLocs[IVY_SHADER_LOC_MATRIX_MVP] = glGetUniformLocation(IVY_GL.state.defaultShaderId, IVY_DEFAULT_SHADER_UNIFORM_NAME_MVP);
         IVY_GL.state.defaultShaderLocs[IVY_SHADER_LOC_COLOR_DIFFUSE] = glGetUniformLocation(IVY_GL.state.defaultShaderId, IVY_DEFAULT_SHADER_UNIFORM_NAME_COLOR);
         IVY_GL.state.defaultShaderLocs[IVY_SHADER_LOC_MAP_DIFFUSE] = glGetUniformLocation(IVY_GL.state.defaultShaderId, IVY_DEFAULT_SHADER_SAMPLER2D_NAME_TEXTURE0);
+
+        printf("[DIAG] Locs: Position=%d, TexCoord=%d, Color=%d, MVP=%d, colDiffuse=%d, texture0=%d\n",
+               IVY_GL.state.defaultShaderLocs[IVY_SHADER_LOC_VERTEX_POSITION],
+               IVY_GL.state.defaultShaderLocs[IVY_SHADER_LOC_VERTEX_TEXCOORD01],
+               IVY_GL.state.defaultShaderLocs[IVY_SHADER_LOC_VERTEX_COLOR],
+               IVY_GL.state.defaultShaderLocs[IVY_SHADER_LOC_MATRIX_MVP],
+               IVY_GL.state.defaultShaderLocs[IVY_SHADER_LOC_COLOR_DIFFUSE],
+               IVY_GL.state.defaultShaderLocs[IVY_SHADER_LOC_MAP_DIFFUSE]);
     }
 }
 
@@ -333,6 +436,11 @@ u32 Ivy_Gfx_LoadShaderProgramEx(const unsigned vsId, const u32 fsId)
     glLinkProgram(programId);
 
     glGetProgramiv(programId, GL_LINK_STATUS, &success);
+    if (!success) {
+        char infoLog[512];
+        glGetProgramInfoLog(programId, 512, NULL, infoLog);
+        fprintf(stderr, "[SHADER PROGRAM LINK ERROR] Info: %s\n", infoLog);
+    }
 
     return programId;
 }
@@ -365,12 +473,16 @@ u32 Ivy_Gfx_LoadTextureId(const void *data, const int width, const int height, c
             if (format < IVY_PIXELFORMAT_COMPRESSED_DXT1_RGB) glTexImage2D(GL_TEXTURE_2D, i, (int)glInternalFormat, mipWidth, mipHeight, 0, glFormat, glType, dataPtr);
 
             if (format == IVY_PIXELFORMAT_UNCOMPRESSED_GRAYSCALE) {
-                int swizzleMask[] = { GL_RED, GL_RED, GL_RED, GL_ONE };
-                glTexParameteriv(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_RGBA, swizzleMask);
+                glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_R, GL_RED);
+                glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_G, GL_RED);
+                glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_B, GL_RED);
+                glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_A, GL_ONE);
             }
             else if (format == IVY_PIXELFORMAT_UNCOMPRESSED_GRAY_ALPHA) {
-                int swizzleMask[] = { GL_RED, GL_RED, GL_RED, GL_GREEN };
-                glTexParameteriv(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_RGBA, swizzleMask);
+                glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_R, GL_RED);
+                glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_G, GL_RED);
+                glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_B, GL_RED);
+                glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_A, GL_GREEN);
             }
         }
 
@@ -412,6 +524,12 @@ u32 Ivy_Gfx_LoadShader(const char *code, const int type)
     int success = 0;
     glCompileShader(shaderId);
     glGetShaderiv(shaderId, GL_COMPILE_STATUS, &success);
+    if (!success) {
+        char infoLog[512];
+        glGetShaderInfoLog(shaderId, 512, NULL, infoLog);
+        fprintf(stderr, "[SHADER COMPILE ERROR] Type: %s, Info: %s\n",
+                (type == GL_VERTEX_SHADER) ? "VERTEX" : "FRAGMENT", infoLog);
+    }
 
     return shaderId;
 }
@@ -440,7 +558,35 @@ IvyRenderTexture Ivy_Gfx_LoadRenderTexture(const int width, const int height)
         Ivy_Gfx_FramebufferAttach(target.id, target.texture.id, IVY_ATTACHMENT_COLOR_CHANNEL0, IVY_ATTACHMENT_TEXTURE2D, 0);
         Ivy_Gfx_FramebufferAttach(target.id, target.depth.id, IVY_ATTACHMENT_DEPTH, IVY_ATTACHMENT_RENDERBUFFER, 0);
 
+        Ivy_Gfx_EnableFramebuffer(target.id);
+        GLenum status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
+        if (status != GL_FRAMEBUFFER_COMPLETE) {
+            printf("[GFX ERROR] Resolve FBO %u tidak complete: 0x%04X\n", target.id, status);
+        }
         Ivy_Gfx_DisableFramebuffer();
+    }
+
+    if (IVY_CORE.window.flags & IVY_FLAG_MSAA_4X_HINT) {
+        glGenFramebuffers(1, &target.msaaId);
+        glBindFramebuffer(GL_FRAMEBUFFER, target.msaaId);
+
+        target.msaaColorId = Ivy_Gfx_LoadColorRenderbufferMultisample(width, height, 4);
+        glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, target.msaaColorId);
+
+        u32 msaaDepthId = Ivy_Gfx_LoadTextureDepthMultisample(width, height, 4);
+        glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, msaaDepthId);
+
+        target.depth.id = msaaDepthId;
+
+        GLenum msaaStatus = glCheckFramebufferStatus(GL_FRAMEBUFFER);
+        if (msaaStatus != GL_FRAMEBUFFER_COMPLETE) {
+            printf("[GFX WARNING] MSAA FBO %u tidak complete (0x%04X), MSAA dinonaktifkan\n", target.msaaId, msaaStatus);
+            glDeleteFramebuffers(1, &target.msaaId);
+            glDeleteRenderbuffers(1, &target.msaaColorId);
+            target.msaaId = 0;
+            target.msaaColorId = 0;
+        }
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
     }
 
     return target;
@@ -468,7 +614,7 @@ void Ivy_Gfx_DisableFramebuffer(void)
 u32 Ivy_Gfx_LoadTextureDepth(const int width, const int height)
 {
     u32 id = 0;
-    const u32 glInternalFormat = GL_DEPTH_COMPONENT;
+    const u32 glInternalFormat = GL_DEPTH_COMPONENT24;
 
     glGenRenderbuffers(1, &id);
     glBindRenderbuffer(GL_RENDERBUFFER, id);
@@ -476,6 +622,26 @@ u32 Ivy_Gfx_LoadTextureDepth(const int width, const int height)
 
     glBindRenderbuffer(GL_RENDERBUFFER, 0);
 
+    return id;
+}
+
+u32 Ivy_Gfx_LoadTextureDepthMultisample(const int width, const int height, const int samples)
+{
+    u32 id = 0;
+    glGenRenderbuffers(1, &id);
+    glBindRenderbuffer(GL_RENDERBUFFER, id);
+    glRenderbufferStorageMultisample(GL_RENDERBUFFER, samples, GL_DEPTH_COMPONENT24, width, height);
+    glBindRenderbuffer(GL_RENDERBUFFER, 0);
+    return id;
+}
+
+u32 Ivy_Gfx_LoadColorRenderbufferMultisample(const int width, const int height, const int samples)
+{
+    u32 id = 0;
+    glGenRenderbuffers(1, &id);
+    glBindRenderbuffer(GL_RENDERBUFFER, id);
+    glRenderbufferStorageMultisample(GL_RENDERBUFFER, samples, GL_RGBA8, width, height);
+    glBindRenderbuffer(GL_RENDERBUFFER, 0);
     return id;
 }
 
@@ -511,6 +677,17 @@ void Ivy_Gfx_FramebufferAttach(const u32 id, const u32 texId, const int attachTy
 
 void Ivy_Gfx_UnloadRenderTexture(const IvyRenderTexture target)
 {
+
+    if (target.msaaId > 0) {
+        glDeleteRenderbuffers(1, &target.msaaColorId);
+
+        glDeleteRenderbuffers(1, &target.depth.id);
+        glDeleteFramebuffers(1, &target.msaaId);
+    } else {
+
+        glDeleteRenderbuffers(1, &target.depth.id);
+    }
+
     glDeleteTextures(1, &target.texture.id);
     Ivy_Gfx_UnloadFramebuffer(target.id);
 }
@@ -547,24 +724,39 @@ void Ivy_Gfx_SetTexture(const u32 id)
     }
 }
 
+void Ivy_Gfx_SetTextureFilter(IvyTexture texture, int filter)
+{
+    if (texture.id > 0) {
+        glBindTexture(GL_TEXTURE_2D, texture.id);
+        if (filter == IVY_TEXTURE_FILTER_POINT) {
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        }
+        else if (filter == IVY_TEXTURE_FILTER_BILINEAR) {
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        }
+        glBindTexture(GL_TEXTURE_2D, 0);
+    }
+}
+
 void Ivy_Gfx_DrawRenderBatch(IvyGLRenderBatch *batch)
 {
-    if (IVY_LIKELY(IVY_GL.state.vertexCounter > 0)) {
-        if (IVY_LIKELY(IVY_GL.extSupported.vao)) glBindVertexArray(batch->vertexBuffer[batch->currentBuffer].vaoId);
 
-        // Vertex positions buffer
+    if (IVY_LIKELY(IVY_GL.state.vertexCounter > 0)) {
+        if (IVY_LIKELY(IVY_GL.extSupported.vao)) {
+            glBindVertexArray(batch->vertexBuffer[batch->currentBuffer].vaoId);
+        }
+
         glBindBuffer(GL_ARRAY_BUFFER, batch->vertexBuffer[batch->currentBuffer].vboId[0]);
         glBufferSubData(GL_ARRAY_BUFFER, 0, (ptrdiff_t)(IVY_GL.state.vertexCounter * 3 * sizeof(float)), batch->vertexBuffer[batch->currentBuffer].vertices);
 
-        // Texture coordinates buffer
         glBindBuffer(GL_ARRAY_BUFFER, batch->vertexBuffer[batch->currentBuffer].vboId[1]);
         glBufferSubData(GL_ARRAY_BUFFER, 0, (ptrdiff_t)(IVY_GL.state.vertexCounter * 2 * sizeof(float)), batch->vertexBuffer[batch->currentBuffer].texCoords);
 
-        // Normals buffer
         glBindBuffer(GL_ARRAY_BUFFER, batch->vertexBuffer[batch->currentBuffer].vboId[2]);
         glBufferSubData(GL_ARRAY_BUFFER, 0, (ptrdiff_t)(IVY_GL.state.vertexCounter * 3 * sizeof(float)), batch->vertexBuffer[batch->currentBuffer].normals);
 
-        // Colors buffer
         glBindBuffer(GL_ARRAY_BUFFER, batch->vertexBuffer[batch->currentBuffer].vboId[3]);
         glBufferSubData(GL_ARRAY_BUFFER, 0, (ptrdiff_t)(IVY_GL.state.vertexCounter * 4 * sizeof(unsigned char)), batch->vertexBuffer[batch->currentBuffer].colors);
 
@@ -588,44 +780,47 @@ void Ivy_Gfx_DrawRenderBatch(IvyGLRenderBatch *batch)
             glUseProgram(IVY_GL.state.currentShaderId);
 
             IvyMatrix matrixMVP = Ivy_Math_MatrixMultiply(IVY_GL.state.modelview, IVY_GL.state.projection);
-            glUniformMatrix4fv(IVY_GL.state.currentShaderLocs[IVY_SHADER_LOC_MATRIX_MVP], 1, false, Ivy_Math_MatrixToFloat(matrixMVP));
+
+            IvyFloat16 mvpFloat = Ivy_Math_MatrixToFloatV(matrixMVP);
+            glUniformMatrix4fv(IVY_GL.state.currentShaderLocs[IVY_SHADER_LOC_MATRIX_MVP], 1, false, mvpFloat.v);
 
             if (IVY_GL.state.currentShaderLocs[IVY_SHADER_LOC_MATRIX_PROJECTION] != -1) {
-                glUniformMatrix4fv(IVY_GL.state.currentShaderLocs[IVY_SHADER_LOC_MATRIX_PROJECTION], 1, false, Ivy_Math_MatrixToFloat(IVY_GL.state.projection));
+                IvyFloat16 projFloat = Ivy_Math_MatrixToFloatV(IVY_GL.state.projection);
+                glUniformMatrix4fv(IVY_GL.state.currentShaderLocs[IVY_SHADER_LOC_MATRIX_PROJECTION], 1, false, projFloat.v);
             }
 
             if (IVY_GL.state.currentShaderLocs[IVY_SHADER_LOC_MATRIX_VIEW] != -1) {
-                glUniformMatrix4fv(IVY_GL.state.currentShaderLocs[IVY_SHADER_LOC_MATRIX_VIEW], 1, false, Ivy_Math_MatrixToFloat(IVY_GL.state.modelview));
+                IvyFloat16 viewFloat = Ivy_Math_MatrixToFloatV(IVY_GL.state.modelview);
+                glUniformMatrix4fv(IVY_GL.state.currentShaderLocs[IVY_SHADER_LOC_MATRIX_VIEW], 1, false, viewFloat.v);
             }
 
             if (IVY_GL.state.currentShaderLocs[IVY_SHADER_LOC_MATRIX_MODEL] != -1) {
-                glUniformMatrix4fv(IVY_GL.state.currentShaderLocs[IVY_SHADER_LOC_MATRIX_MODEL], 1, false, Ivy_Math_MatrixToFloat(IVY_GL.state.transform));
+                IvyFloat16 modelFloat = Ivy_Math_MatrixToFloatV(IVY_GL.state.transform);
+                glUniformMatrix4fv(IVY_GL.state.currentShaderLocs[IVY_SHADER_LOC_MATRIX_MODEL], 1, false, modelFloat.v);
             }
 
             if (IVY_GL.state.currentShaderLocs[IVY_SHADER_LOC_MATRIX_NORMAL] != -1) {
-                glUniformMatrix4fv(IVY_GL.state.currentShaderLocs[IVY_SHADER_LOC_MATRIX_NORMAL], 1, false, Ivy_Math_MatrixToFloat(Ivy_Math_MatrixTranspose(Ivy_Math_MatrixInvert(IVY_GL.state.transform))));
+                IvyFloat16 normalFloat = Ivy_Math_MatrixToFloatV(Ivy_Math_MatrixTranspose(Ivy_Math_MatrixInvert(IVY_GL.state.transform)));
+                glUniformMatrix4fv(IVY_GL.state.currentShaderLocs[IVY_SHADER_LOC_MATRIX_NORMAL], 1, false, normalFloat.v);
             }
 
            if (IVY_GL.extSupported.vao) {
                glBindVertexArray(batch->vertexBuffer[batch->currentBuffer].vaoId);
            }
            else {
-               // Bind vertex attrib: position (shader-location = 0)
+
                glBindBuffer(GL_ARRAY_BUFFER, batch->vertexBuffer[batch->currentBuffer].vboId[0]);
                glVertexAttribPointer(IVY_GL.state.currentShaderLocs[IVY_SHADER_LOC_VERTEX_POSITION], 3, GL_FLOAT, 0, 0, 0);
                glEnableVertexAttribArray(IVY_GL.state.currentShaderLocs[IVY_SHADER_LOC_VERTEX_POSITION]);
 
-               // Bind vertex attrib: texcoord (shader-location = 1)
                glBindBuffer(GL_ARRAY_BUFFER, batch->vertexBuffer[batch->currentBuffer].vboId[1]);
                glVertexAttribPointer(IVY_GL.state.currentShaderLocs[IVY_SHADER_LOC_VERTEX_TEXCOORD01], 2, GL_FLOAT, 0, 0, 0);
                glEnableVertexAttribArray(IVY_GL.state.currentShaderLocs[IVY_SHADER_LOC_VERTEX_TEXCOORD01]);
 
-               // Bind vertex attrib: normal (shader-location = 2)
                glBindBuffer(GL_ARRAY_BUFFER, batch->vertexBuffer[batch->currentBuffer].vboId[2]);
                glVertexAttribPointer(IVY_GL.state.currentShaderLocs[IVY_SHADER_LOC_VERTEX_NORMAL], 3, GL_FLOAT, 0, 0, 0);
                glEnableVertexAttribArray(IVY_GL.state.currentShaderLocs[IVY_SHADER_LOC_VERTEX_NORMAL]);
 
-               // Bind vertex attrib: color (shader-location = 3)
                glBindBuffer(GL_ARRAY_BUFFER, batch->vertexBuffer[batch->currentBuffer].vboId[3]);
                glVertexAttribPointer(IVY_GL.state.currentShaderLocs[IVY_SHADER_LOC_VERTEX_COLOR], 4, GL_UNSIGNED_BYTE, GL_TRUE, 0, 0);
                glEnableVertexAttribArray(IVY_GL.state.currentShaderLocs[IVY_SHADER_LOC_VERTEX_COLOR]);
@@ -634,7 +829,7 @@ void Ivy_Gfx_DrawRenderBatch(IvyGLRenderBatch *batch)
            }
 
             glUniform4f(IVY_GL.state.currentShaderLocs[IVY_SHADER_LOC_COLOR_DIFFUSE], 1.0f, 1.0f, 1.0f, 1.0f);
-            glUniform1i(IVY_GL.state.currentShaderLocs[IVY_SHADER_LOC_MAP_DIFFUSE], 0);  // Active default sampler2D: texture0
+            glUniform1i(IVY_GL.state.currentShaderLocs[IVY_SHADER_LOC_MAP_DIFFUSE], 0);
 
             for (int i = 0; i < IVY_DEFAULT_BATCH_MAX_TEXTURE_UNITS; i++)
             {
@@ -650,7 +845,9 @@ void Ivy_Gfx_DrawRenderBatch(IvyGLRenderBatch *batch)
             for (int i = 0, vertexOffset = 0; i < batch->drawCounter; i++) {
                 glBindTexture(GL_TEXTURE_2D, batch->draws[i].textureId);
 
-                if ((batch->draws[i].mode == IVY_LINES) || (batch->draws[i].mode == IVY_TRIANGLES)) glDrawArrays(batch->draws[i].mode, vertexOffset, batch->draws[i].vertexCount);
+                if ((batch->draws[i].mode == IVY_LINES) || (batch->draws[i].mode == IVY_TRIANGLES)) {
+                    glDrawArrays(batch->draws[i].mode, vertexOffset, batch->draws[i].vertexCount);
+                }
                 else {
                     glDrawElements(GL_TRIANGLES, batch->draws[i].vertexCount/4*6, GL_UNSIGNED_INT, (void *)(vertexOffset / 4 * 6 * sizeof(u32)));
                 }
@@ -679,7 +876,6 @@ void Ivy_Gfx_DrawRenderBatch(IvyGLRenderBatch *batch)
 
     batch->currentDepth = -1.0f;
 
-    // Restore projection/modelview matrices
     IVY_GL.state.projection = matrixProjection;
     IVY_GL.state.modelview = matrixModelView;
 
@@ -690,10 +886,8 @@ void Ivy_Gfx_DrawRenderBatch(IvyGLRenderBatch *batch)
         batch->draws[i].textureId = IVY_GL.state.defaultTextureId;
     }
 
-    // Reset active texture
     for (int i = 0; i < IVY_DEFAULT_BATCH_MAX_TEXTURE_UNITS; i++) IVY_GL.state.activeTextureId[i] = 0;
 
-    // Reset draws counter
     batch->drawCounter = 1;
 
     batch->currentBuffer++;
@@ -773,22 +967,18 @@ void Ivy_Gfx_DrawTexturePro(IvyTexture texture, IvyRectangle src, IvyRectangle d
         Ivy_Gfx_Color4UB(color.r, color.g, color.b, color.a);
         Ivy_Gfx_Normal3F(0.0f, 0.0f, 1.0f);
 
-        // Top-left corner for texture and quad
         if (flipX) Ivy_Gfx_TextureCoord2F((src.x + src.width)/width, src.y/height);
         else Ivy_Gfx_TextureCoord2F(src.x/width, src.y/height);
         Ivy_Gfx_Vertex2F(topLeft.x, topLeft.y);
 
-        // Bottom-left corner for texture and quad
         if (flipX) Ivy_Gfx_TextureCoord2F((src.x + src.width)/width, (src.y + src.height)/height);
         else Ivy_Gfx_TextureCoord2F(src.x/width, (src.y + src.height)/height);
         Ivy_Gfx_Vertex2F(bottomLeft.x, bottomLeft.y);
 
-        // Bottom-right corner for texture and quad
         if (flipX) Ivy_Gfx_TextureCoord2F(src.x/width, (src.y + src.height)/height);
         else Ivy_Gfx_TextureCoord2F((src.x + src.width)/width, (src.y + src.height)/height);
         Ivy_Gfx_Vertex2F(bottomRight.x, bottomRight.y);
 
-        // Top-right corner for texture and quad
         if (flipX) Ivy_Gfx_TextureCoord2F(src.x/width, src.y/height);
         else Ivy_Gfx_TextureCoord2F((src.x + src.width)/width, src.y/height);
         Ivy_Gfx_Vertex2F(topRight.x, topRight.y);
@@ -864,7 +1054,13 @@ void Ivy_Gfx_BeginTextureMode(IvyRenderTexture target)
 {
     Ivy_Gfx_DrawRenderBatchActive();
 
-    Ivy_Gfx_EnableFramebuffer(target.id);
+    IVY_CORE.window.msaaResolveFBO = target.id;
+
+    if (target.msaaId > 0) {
+        glBindFramebuffer(GL_FRAMEBUFFER, target.msaaId);
+    } else {
+        Ivy_Gfx_EnableFramebuffer(target.id);
+    }
 
     glViewport(0, 0, target.texture.width, target.texture.height);
 
@@ -874,7 +1070,7 @@ void Ivy_Gfx_BeginTextureMode(IvyRenderTexture target)
     Ivy_Gfx_MatrixMode(IVY_PROJECTION);
     Ivy_Gfx_LoadIdentity();
 
-    Ivy_Gfx_Ortho(0, target.texture.width, target.texture.height, 0, 0.0f, 1.0f);
+    Ivy_Gfx_Ortho(0, target.texture.width, target.texture.height, 0, -10.0f, 10.0f);
 
     Ivy_Gfx_MatrixMode(IVY_MODELVIEW);
     Ivy_Gfx_LoadIdentity();
@@ -888,9 +1084,22 @@ void Ivy_Gfx_EndTextureMode(void)
 {
     Ivy_Gfx_DrawRenderBatchActive();
 
+    if (IVY_CORE.window.flags & IVY_FLAG_MSAA_4X_HINT && IVY_CORE.window.msaaResolveFBO > 0) {
+        const int w = IVY_CORE.window.currentFBO.width;
+        const int h = IVY_CORE.window.currentFBO.height;
+        GLint msaaFbo = 0;
+        glGetIntegerv(GL_FRAMEBUFFER_BINDING, &msaaFbo);
+        glBindFramebuffer(GL_READ_FRAMEBUFFER, (u32)msaaFbo);
+        glBindFramebuffer(GL_DRAW_FRAMEBUFFER, IVY_CORE.window.msaaResolveFBO);
+        glBlitFramebuffer(0, 0, w, h, 0, 0, w, h, GL_COLOR_BUFFER_BIT, GL_NEAREST);
+    }
+
     Ivy_Gfx_DisableFramebuffer();
 
     SetupViewport(IVY_CORE.window.render.width, IVY_CORE.window.render.height);
+
+    IVY_GL.state.framebufferWidth = IVY_CORE.window.render.width;
+    IVY_GL.state.framebufferHeight = IVY_CORE.window.render.height;
 
     Ivy_Gfx_MatrixMode(IVY_MODELVIEW);
     Ivy_Gfx_LoadIdentity();
@@ -899,6 +1108,7 @@ void Ivy_Gfx_EndTextureMode(void)
     IVY_CORE.window.currentFBO.width = IVY_CORE.window.render.width;
     IVY_CORE.window.currentFBO.height = IVY_CORE.window.render.height;
     IVY_CORE.window.usingFBO = false;
+    IVY_CORE.window.msaaResolveFBO = 0;
 }
 
 void Ivy_Gfx_UnloadFramebuffer(u32 id)
@@ -962,21 +1172,17 @@ void Ivy_Gfx_Vertex3F(const float x, const float y, const float z)
             Ivy_Gfx_CheckRenderBatchLimit(4 + 1);
     }
 
-    // Add vertices
     IVY_GL.currentBatch->vertexBuffer[IVY_GL.currentBatch->currentBuffer].vertices[3 * IVY_GL.state.vertexCounter] = tx;
     IVY_GL.currentBatch->vertexBuffer[IVY_GL.currentBatch->currentBuffer].vertices[3 * IVY_GL.state.vertexCounter + 1] = ty;
     IVY_GL.currentBatch->vertexBuffer[IVY_GL.currentBatch->currentBuffer].vertices[3 * IVY_GL.state.vertexCounter + 2] = tz;
 
-    // Add current texcoord
     IVY_GL.currentBatch->vertexBuffer[IVY_GL.currentBatch->currentBuffer].texCoords[2 * IVY_GL.state.vertexCounter] = IVY_GL.state.texcoordx;
     IVY_GL.currentBatch->vertexBuffer[IVY_GL.currentBatch->currentBuffer].texCoords[2 * IVY_GL.state.vertexCounter + 1] = IVY_GL.state.texcoordy;
 
-    // Add current normal
     IVY_GL.currentBatch->vertexBuffer[IVY_GL.currentBatch->currentBuffer].normals[3 * IVY_GL.state.vertexCounter] = IVY_GL.state.normalx;
     IVY_GL.currentBatch->vertexBuffer[IVY_GL.currentBatch->currentBuffer].normals[3 * IVY_GL.state.vertexCounter + 1] = IVY_GL.state.normaly;
     IVY_GL.currentBatch->vertexBuffer[IVY_GL.currentBatch->currentBuffer].normals[3 * IVY_GL.state.vertexCounter + 2] = IVY_GL.state.normalz;
 
-    // Add current color
     IVY_GL.currentBatch->vertexBuffer[IVY_GL.currentBatch->currentBuffer].colors[4 * IVY_GL.state.vertexCounter] = IVY_GL.state.colorr;
     IVY_GL.currentBatch->vertexBuffer[IVY_GL.currentBatch->currentBuffer].colors[4 * IVY_GL.state.vertexCounter + 1] = IVY_GL.state.colorg;
     IVY_GL.currentBatch->vertexBuffer[IVY_GL.currentBatch->currentBuffer].colors[4 * IVY_GL.state.vertexCounter + 2] = IVY_GL.state.colorb;
@@ -1051,4 +1257,11 @@ void Ivy_Gfx_Ortho(double left, double right, double bottom, double top, double 
     matOrtho.m15 = 1.0f;
 
     *IVY_GL.state.currentMatrix = Ivy_Math_MatrixMultiply(*IVY_GL.state.currentMatrix, matOrtho);
+}
+
+IvyMatrix Ivy_Gfx_GetMatrixTransform(void)
+{
+    IvyMatrix mat = Ivy_Math_MatrixIdentity();
+    mat = IVY_GL.state.transform;
+    return mat;
 }
