@@ -11,13 +11,13 @@
 IvyPlatformData IVY_PLATFORM = {0};
 IvyCoreData     IVY_CORE     = {0};
 
-static void Ivy_Core_InitPlatform(void)
+static void IvyCore_InitPlatform(void)
 {
     const char *title = IVY_CORE.window.title ? IVY_CORE.window.title : "Ivy";
-    int width = IVY_CORE.window.screen.width ? (int)IVY_CORE.window.screen.width : IVY_DEFAULT_SCREEN_WIDTH;
-    int height = IVY_CORE.window.screen.height ? (int)IVY_CORE.window.screen.height : IVY_DEFAULT_SCREEN_HEIGHT;
+    const int width = IVY_CORE.window.screen.width ? (int)IVY_CORE.window.screen.width : IVY_DEFAULT_SCREEN_WIDTH;
+    const int height = IVY_CORE.window.screen.height ? (int)IVY_CORE.window.screen.height : IVY_DEFAULT_SCREEN_HEIGHT;
 
-    bool success = Ivy_Platform_Init(title, width, height);
+    const bool success = Ivy_Platform_Init(title, width, height);
     IVY_CHECK(success, "[Platform] Failed to initialize native platform!");
 
     IVY_CORE.time.prev = Ivy_Core_GetTime();
@@ -36,11 +36,11 @@ void Ivy_Core_InitWindow(IvyArenaLinear *arena, const u32 width, const u32 heigh
         IVY_CORE.window.title = title;
 
     memset(&IVY_CORE.input, 0, sizeof(IVY_CORE.input));
-    IVY_CORE.input.keyboard.exitKey    = IVY_KEY_ESCAPE;
-    IVY_CORE.input.mouse.scale         = (IvyVector2){ 1.0f, 1.0f };
-    IVY_CORE.input.mouse.cursor        = IVY_MOUSE_CURSOR_ARROW;
+    IVY_CORE.input.keyboard.exitKey = IVY_KEY_ESCAPE;
+    IVY_CORE.input.mouse.scale      = (IvyVector2){ 1.0f, 1.0f };
+    IVY_CORE.input.mouse.cursor     = IVY_MOUSE_CURSOR_ARROW;
 
-    Ivy_Core_InitPlatform();
+    IvyCore_InitPlatform();
 
     if (IVY_CORE.window.render.width == 0 || IVY_CORE.window.render.height == 0)
         IVY_CORE.window.render = IVY_CORE.window.screen;

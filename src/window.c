@@ -1,78 +1,70 @@
-#include "ivy/window.h"
-#include "ivy/core.h"
-#include "ivy/math.h"
-#include "ivy/platform.h"
+#include "window.h"
+#include "events.h"
+#include "fwd.h"
+#include "glfw.h"
+#include "log.h"
+#include "signal.h"
 
-#include <string.h>
-
-extern IvyCoreData IVY_CORE;
-
-bool Ivy_Window_ShouldClose(void)
+static void Ivy_GLFW_FramebufferSize_Callback(GLFWwindow *glfwWindow, int width, int height)
 {
-    if (IVY_CORE.window.ready) return Ivy_Platform_ShouldClose();
-    return true;
+    IvyWindow *window = (IvyWindow *)glfwGetWindowUserPointer(glfwWindow);
+    if (IVY_UNLIKELY(window == NULL)) return;
+
+    window->width = width;
+    window->height = height;
+
+    IvyEventWindowResize event = {
+        .window = window,
+        .width = width,
+        .height = height
+    };
+
+    Ivy_Signal_Emit(&window->events.resize, &event);
 }
 
-IvyVector2 Ivy_Window_GetWindowScaleDPI(void)
+IvyStatus Ivy_Window_Init(IvyWindow *window, const char *title, int width, int height)
 {
-    if (IVY_CORE.window.ready) return Ivy_Platform_GetWindowScaleDPI();
-    return (IvyVector2){ 1.0f, 1.0f };
-}
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-int Ivy_Window_GetCurrentMonitor(void)
-{
-    if (IVY_CORE.window.ready) return Ivy_Platform_GetCurrentMonitor();
-    return 0;
-}
-
-void Ivy_Window_SetWindowPosition(const int x, const int y)
-{
-    IVY_CORE.window.position.x = x;
-    IVY_CORE.window.position.y = y;
-    if (IVY_CORE.window.ready) {
-        Ivy_Platform_SetWindowPosition(x, y);
+    GLFWwindow *glfwWindow = glfwCreateWindow(width, height, title, NULL, NULL);
+    if (IVY_UNLIKELY(glfwWindow == NULL)) {
+        IVY_LOG_ERROR("(GLFWwindow) Failed to created.");
+        return IVY_ERROR_NULL_PTR;
     }
+
+    glfwMakeContextCurrent(glfwWindow);
+
+    window->handle = glfwWindow;
+    window->title = title;
+    window->width = width;
+    window->height = height;
+    window->vsync = true;
+
+    Ivy_Signal_Init(&window->events.resize);
+
+    glfwSetWindowUserPointer(glfwWindow, window);
+    glfwSetFramebufferSizeCallback(glfwWindow, Ivy_GLFW_FramebufferSize_Callback);
+
+    IVY_LOG_INFO("(IvyWindow) VSync enabled.");
+    glfwSwapInterval(1);
+
+    IVY_LOG_INFO("(IvyWindow) Created successfully.");
+
+    return IVY_SUCCESS;
 }
 
-void Ivy_Window_MinimizeWindow(void)
+void Ivy_Window_Terminate(IvyWindow *window)
 {
-    IVY_FLAG_SET(IVY_CORE.window.flags, IVY_FLAG_WINDOW_MINIMIZED);
-    if (IVY_CORE.window.ready) {
-        Ivy_Platform_SetWindowState(IVY_CORE.window.flags);
-    }
+    IVY_ASSERT(window != NULL, "(IvyWindow) is NULL.");
+
+    if (IVY_UNLIKELY(window->handle == NULL))
+        return;
+
+    glfwDestroyWindow(window->handle);
+    window->handle = NULL;
+
+    IVY_LOG_INFO("(IvyWindow) Terminated.");
 }
 
-void Ivy_Window_MaximizeWindow(void)
-{
-    IVY_FLAG_SET(IVY_CORE.window.flags, IVY_FLAG_WINDOW_MAXIMIZED);
-    if (IVY_CORE.window.ready) {
-        Ivy_Platform_SetWindowState(IVY_CORE.window.flags);
-    }
-}
-
-void Ivy_Window_ToggleFullscreen(void)
-{
-    if (IVY_CORE.window.ready) {
-        Ivy_Platform_ToggleFullscreen();
-    }
-}
-
-void Ivy_Window_ToggleBorderlessWindow(void)
-{
-    if (IVY_CORE.window.ready) {
-        Ivy_Platform_ToggleBorderlessWindow();
-    }
-}
-
-void Ivy_Window_SetWindowState(const u32 flags)
-{
-    IVY_CORE.window.flags = flags;
-    if (IVY_CORE.window.ready) {
-        Ivy_Platform_SetWindowState(flags);
-    }
-}
-
-bool Ivy_Window_IsResized(void)
-{
-    return IVY_CORE.window.resizedLastFrame;
-}

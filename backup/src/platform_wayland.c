@@ -1,12 +1,12 @@
 #ifndef _WIN32
-#include "platform_internal.h"
-#include "xdg-shell-client-protocol.h"
+#include <poll.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <sys/mman.h>
 #include <unistd.h>
-#include <poll.h>
+#include "platform_internal.h"
+#include "xdg-shell-client-protocol.h"
 
 extern int MapX11KeyToIvy(KeySym sym);
 
