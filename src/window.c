@@ -40,19 +40,29 @@ IvyStatus Ivy_Window_Init(IvyWindow *window, const char *title, int width, int h
     window->title = title;
     window->width = width;
     window->height = height;
-    window->vsync = true;
 
     Ivy_Signal_Init(&window->events.resize);
 
     glfwSetWindowUserPointer(glfwWindow, window);
     glfwSetFramebufferSizeCallback(glfwWindow, Ivy_GLFW_FramebufferSize_Callback);
 
-    IVY_LOG_INFO("(IvyWindow) VSync enabled.");
-    glfwSwapInterval(1);
+    Ivy_Window_SetVSync(window, 1);
 
     IVY_LOG_INFO("(IvyWindow) Created successfully.");
 
     return IVY_SUCCESS;
+}
+
+void Ivy_Window_SetVSync(IvyWindow *window, const bool status)
+{
+    IVY_ASSERT(window, "(IvyWindow) is NULL.");
+
+    if (window->vsync == status) return;
+
+    window->vsync = status;
+    glfwSwapInterval(status);
+
+    IVY_LOG_INFO("(IvyWindow) VSync is %s.", (status) ? "Enabled" : "Disabled");
 }
 
 void Ivy_Window_Terminate(IvyWindow *window)

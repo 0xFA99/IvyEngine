@@ -26,6 +26,7 @@ struct IvyWindow
 };
 
 IvyStatus Ivy_Window_Init(IvyWindow *window, const char *title, int width, int height);
+void Ivy_Window_SetVSync(IvyWindow *window, bool status);
 void Ivy_Window_Terminate(IvyWindow *window);
 
 #ifdef __cplusplus
