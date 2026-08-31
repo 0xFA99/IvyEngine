@@ -5,6 +5,7 @@
 #include "types.h"
 #include "window.h"
 #include "renderer.h"
+#include "input.h"
 #include "signal.h"
 
 #include <stdbool.h>
@@ -17,6 +18,7 @@ struct IvyEngine
 {
     IvyWindow window;
     IvyRenderer renderer;
+    IvyInput input;
 
     IvySignal event_signal;
 

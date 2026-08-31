@@ -11,14 +11,18 @@ add_executable(${PROJECT_NAME}
         src/engine.c
         src/window.c
         src/renderer.c
+        src/input.c
 )
 
 target_include_directories(${PROJECT_NAME} PRIVATE
     include
 )
 
-target_compile_definitions(IvyEngine PRIVATE
+option(IVY_ENABLE_LOGGING "Enable logging in Release builds" OFF)
+
+target_compile_definitions(${PROJECT_NAME} PRIVATE
         $<$<CONFIG:Debug>:IVY_DEBUG>
+        $<$<AND:$<CONFIG:Release>,$<NOT:$<BOOL:${IVY_ENABLE_LOGGING}>>>:IVY_LOG_DISABLE>
 )
 
 if(UNIX AND NOT APPLE)

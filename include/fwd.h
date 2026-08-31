@@ -8,6 +8,7 @@ extern "C" {
 typedef struct IvyEngine IvyEngine;
 typedef struct IvyWindow IvyWindow;
 typedef struct IvyRenderer IvyRenderer;
+typedef struct IvyInput IvyInput;
 
 typedef struct IvyEventWindowResize IvyEventWindowResize;
 

@@ -28,7 +28,8 @@ extern "C" {
 typedef struct GLFWwindow  GLFWwindow;
 typedef struct GLFWmonitor GLFWmonitor;
 typedef void (*GLFWglproc)(void);
-typedef void (* GLFWframebuffersizefun)(GLFWwindow* window, int width, int height);
+typedef void (*GLFWframebuffersizefun)(GLFWwindow *window, int width, int height);
+typedef void (*GLFWkeyfun)(GLFWwindow *window, int key, int scancode, int action, int mods);
 
 #define IVY_GLFW_FUNCTIONS(X) \
     X(int, glfwInit, void) \
@@ -44,7 +45,9 @@ typedef void (* GLFWframebuffersizefun)(GLFWwindow* window, int width, int heigh
     X(GLFWglproc, glfwGetProcAddress, const char *procname) \
     X(void*, glfwGetWindowUserPointer, GLFWwindow *window) \
     X(void, glfwSetWindowUserPointer, GLFWwindow *window, void *pointer) \
-    X(GLFWframebuffersizefun, glfwSetFramebufferSizeCallback, GLFWwindow *window, GLFWframebuffersizefun callback)
+    X(GLFWframebuffersizefun, glfwSetFramebufferSizeCallback, GLFWwindow *window, GLFWframebuffersizefun callback) \
+    X(GLFWkeyfun, glfwSetKeyCallback, GLFWwindow *window, GLFWkeyfun callback)
+
     // adjust as needed
 
 #define X(ret, name, ...) typedef ret (*PFN_##name)(__VA_ARGS__);

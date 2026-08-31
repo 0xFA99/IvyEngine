@@ -42,6 +42,7 @@ IvyStatus Ivy_Engine_Init(IvyEngine *engine)
     }
 
     Ivy_Renderer_Init(&engine->renderer, &engine->window);
+    Ivy_Input_Init(&engine->input, engine->window.handle);
 
     Ivy_Signal_Init(&engine->event_signal);
 
