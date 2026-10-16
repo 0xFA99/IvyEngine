@@ -12,6 +12,9 @@ typedef struct IvyInput IvyInput;
 
 typedef struct IvyEventWindowResize IvyEventWindowResize;
 typedef struct IvyEventKey IvyEventKey;
+typedef struct IvyEventMouseButton IvyEventMouseButton;
+typedef struct IvyEventMouseMove IvyEventMouseMove;
+typedef struct IvyEventMouseScroll IvyEventMouseScroll;
 
 typedef struct IvyVirtualResolution IvyVirtualResolution;
 

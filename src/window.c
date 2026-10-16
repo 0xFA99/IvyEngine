@@ -1,41 +1,15 @@
-#include "window.h"
-#include "events.h"
 #include "fwd.h"
 #include "glfw.h"
-#include "log.h"
+#include "window.h"
 #include "signal.h"
+#include "events.h"
+#include "log.h"
 
-static void Ivy_GLFW_FramebufferSize_Callback(GLFWwindow *glfwWindow, int width, int height)
-{
-    IvyWindow *window = (IvyWindow *)glfwGetWindowUserPointer(glfwWindow);
-    if (IVY_UNLIKELY(window == NULL)) return;
-
-    window->width = width;
-    window->height = height;
-
-    IvyEventWindowResize event = {
-        .window = window,
-        .width = width,
-        .height = height
-    };
-
-    Ivy_Signal_Emit(&window->events.resize, &event);
-}
-
-static void Ivy_GLFW_Key_Callback(GLFWwindow *glfwWindow, int key, int scancode, int action, int mods)
-{
-    IvyWindow *window = glfwGetWindowUserPointer(glfwWindow);
-    if (IVY_UNLIKELY(window == NULL)) return;
-
-    IvyEventKey event = {
-        .key = key,
-        .scancode = scancode,
-        .action = action,
-        .mods = mods
-    };
-
-    Ivy_Signal_Emit(&window->events.key, &event);
-}
+static void Ivy_GLFW_FramebufferSize_Callback(GLFWwindow *glfwWindow, int width, int height);
+static void Ivy_GLFW_Key_Callback(GLFWwindow *glfwWindow, int key, int scancode, int action, int mods);
+static void Ivy_GLFW_MouseButton_Callback(GLFWwindow *glfwWindow, int button, int action, int mods);
+static void Ivy_GLFW_MouseMove_Callback(GLFWwindow *glfwWindow, double xpos, double ypos);
+static void Ivy_GLFW_MouseScroll_Callback(GLFWwindow *glfwWindow, double xoffset, double yoffset);
 
 IvyStatus Ivy_Window_Init(IvyWindow *window, const char *title, int width, int height)
 {
@@ -58,10 +32,16 @@ IvyStatus Ivy_Window_Init(IvyWindow *window, const char *title, int width, int h
 
     Ivy_Signal_Init(&window->events.resize);
     Ivy_Signal_Init(&window->events.key);
+    Ivy_Signal_Init(&window->events.mouse_button);
+    Ivy_Signal_Init(&window->events.mouse_move);
+    Ivy_Signal_Init(&window->events.mouse_scroll);
 
     glfwSetWindowUserPointer(glfwWindow, window);
     glfwSetFramebufferSizeCallback(glfwWindow, Ivy_GLFW_FramebufferSize_Callback);
     glfwSetKeyCallback(glfwWindow, Ivy_GLFW_Key_Callback);
+    glfwSetMouseButtonCallback(glfwWindow, Ivy_GLFW_MouseButton_Callback);
+    glfwSetCursorPosCallback(glfwWindow, Ivy_GLFW_MouseMove_Callback);
+    glfwSetScrollCallback(glfwWindow, Ivy_GLFW_MouseScroll_Callback);
 
     Ivy_Window_SetVSync(window, 1);
 
@@ -95,3 +75,74 @@ void Ivy_Window_Terminate(IvyWindow *window)
     IVY_LOG_INFO("(IvyWindow) Terminated.");
 }
 
+static void Ivy_GLFW_FramebufferSize_Callback(GLFWwindow *glfwWindow, int width, int height)
+{
+    IvyWindow *window = (IvyWindow *)glfwGetWindowUserPointer(glfwWindow);
+    if (IVY_UNLIKELY(window == NULL)) return;
+
+    window->width = width;
+    window->height = height;
+
+    IvyEventWindowResize event = {
+        .window = window,
+        .width = width,
+        .height = height
+    };
+
+    Ivy_Signal_Emit(&window->events.resize, &event);
+}
+
+static void Ivy_GLFW_Key_Callback(GLFWwindow *glfwWindow, int key, int scancode, int action, int mods)
+{
+    IvyWindow *window = glfwGetWindowUserPointer(glfwWindow);
+    if (IVY_UNLIKELY(window == NULL)) return;
+
+    IvyEventKey event = {
+        .key = key,
+        .scancode = scancode,
+        .action = action,
+        .mods = mods
+    };
+
+    Ivy_Signal_Emit(&window->events.key, &event);
+}
+
+static void Ivy_GLFW_MouseButton_Callback(GLFWwindow *glfwWindow, int button, int action, int mods)
+{
+    IvyWindow *window = glfwGetWindowUserPointer(glfwWindow);
+    if (!window) return;
+
+    IvyEventMouseButton event = {
+        .button = button,
+        .action = action,
+        .mods = mods
+    };
+
+    Ivy_Signal_Emit(&window->events.mouse_button, &event);
+}
+
+static void Ivy_GLFW_MouseMove_Callback(GLFWwindow *glfwWindow, double xpos, double ypos)
+{
+    IvyWindow *window = glfwGetWindowUserPointer(glfwWindow);
+    if (!window) return;
+
+    IvyEventMouseMove event = {
+        .x = xpos,
+        .y = ypos
+    };
+
+    Ivy_Signal_Emit(&window->events.mouse_move, &event);
+}
+
+static void Ivy_GLFW_MouseScroll_Callback(GLFWwindow *glfwWindow, double xoffset, double yoffset)
+{
+    IvyWindow *window = glfwGetWindowUserPointer(glfwWindow);
+    if (!window) return;
+
+    IvyEventMouseScroll event = {
+        .x_offset = xoffset,
+        .y_offset = yoffset
+    };
+
+    Ivy_Signal_Emit(&window->events.mouse_scroll, &event);
+}

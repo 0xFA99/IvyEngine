@@ -29,11 +29,18 @@ extern "C" {
 #define GLFW_PRESS                  1
 #define GLFW_KEY_SPACE              32
 
+#define GLFW_MOUSE_BUTTON_LEFT      0
+#define GLFW_MOUSE_BUTTON_RIGHT     1
+#define GLFW_MOUSE_BUTTON_MIDDLE    2
+
 typedef struct GLFWwindow  GLFWwindow;
 typedef struct GLFWmonitor GLFWmonitor;
 typedef void (*GLFWglproc)(void);
 typedef void (*GLFWframebuffersizefun)(GLFWwindow *window, int width, int height);
 typedef void (*GLFWkeyfun)(GLFWwindow *window, int key, int scancode, int action, int mods);
+typedef void (*GLFWmousebuttonfun)(GLFWwindow *window, int button, int action, int mods);
+typedef void (*GLFWcursorposfun)(GLFWwindow *window, double xpos, double ypos);
+typedef void (*GLFWscrollfun)(GLFWwindow *window, double xoffset, double yoffset);
 
 #define IVY_GLFW_FUNCTIONS(X) \
     X(int, glfwInit, void) \
@@ -50,7 +57,10 @@ typedef void (*GLFWkeyfun)(GLFWwindow *window, int key, int scancode, int action
     X(void*, glfwGetWindowUserPointer, GLFWwindow *window) \
     X(void, glfwSetWindowUserPointer, GLFWwindow *window, void *pointer) \
     X(GLFWframebuffersizefun, glfwSetFramebufferSizeCallback, GLFWwindow *window, GLFWframebuffersizefun callback) \
-    X(GLFWkeyfun, glfwSetKeyCallback, GLFWwindow *window, GLFWkeyfun callback)
+    X(GLFWkeyfun, glfwSetKeyCallback, GLFWwindow *window, GLFWkeyfun callback) \
+    X(GLFWmousebuttonfun, glfwSetMouseButtonCallback, GLFWwindow *window, GLFWmousebuttonfun callback) \
+    X(GLFWcursorposfun, glfwSetCursorPosCallback, GLFWwindow *window, GLFWcursorposfun callback) \
+    X(GLFWscrollfun, glfwSetScrollCallback, GLFWwindow *window, GLFWscrollfun callback)
 
     // adjust as needed
 

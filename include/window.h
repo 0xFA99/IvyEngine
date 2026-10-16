@@ -22,6 +22,9 @@ struct IvyWindow
     struct {
         IvySignal resize;
         IvySignal key;
+        IvySignal mouse_button;
+        IvySignal mouse_move;
+        IvySignal mouse_scroll;
     } events;
 };
 

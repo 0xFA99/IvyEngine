@@ -21,6 +21,22 @@ struct IvyEventKey {
     int mods;
 };
 
+struct IvyEventMouseButton {
+    int button;
+    int action;
+    int mods;
+};
+
+struct IvyEventMouseMove {
+    double x;
+    double y;
+};
+
+struct IvyEventMouseScroll {
+    double x_offset;
+    double y_offset;
+};
+
 #ifdef __cplusplus
 }
 #endif

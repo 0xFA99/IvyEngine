@@ -74,6 +74,14 @@ void Ivy_Engine_Run(IvyEngine *engine)
             IVY_LOG_INFO("(IvyInput) Key Space Pressed!");
         }
 
+        if (Ivy_Input_IsKeyDown(&engine->input, GLFW_KEY_SPACE)) {
+            IVY_LOG_INFO("(IvyInput) Key Space Down!");
+        }
+
+        if (Ivy_Input_IsKeyReleased(&engine->input, GLFW_KEY_SPACE)) {
+            IVY_LOG_INFO("(IvyInput) Key Space Released!");
+        }
+
         // render
         glfwSwapBuffers(window);
     }
