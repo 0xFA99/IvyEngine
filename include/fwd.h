@@ -11,6 +11,9 @@ typedef struct IvyRenderer IvyRenderer;
 typedef struct IvyInput IvyInput;
 
 typedef struct IvyEventWindowResize IvyEventWindowResize;
+typedef struct IvyEventKey IvyEventKey;
+
+typedef struct IvyVirtualResolution IvyVirtualResolution;
 
 #ifdef __cplusplus
 }

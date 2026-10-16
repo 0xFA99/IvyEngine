@@ -14,6 +14,13 @@ struct IvyEventWindowResize
     int height;
 };
 
+struct IvyEventKey {
+    int key;
+    int scancode;
+    int action;
+    int mods;
+};
+
 #ifdef __cplusplus
 }
 #endif

@@ -22,6 +22,21 @@ static void Ivy_GLFW_FramebufferSize_Callback(GLFWwindow *glfwWindow, int width,
     Ivy_Signal_Emit(&window->events.resize, &event);
 }
 
+static void Ivy_GLFW_Key_Callback(GLFWwindow *glfwWindow, int key, int scancode, int action, int mods)
+{
+    IvyWindow *window = glfwGetWindowUserPointer(glfwWindow);
+    if (IVY_UNLIKELY(window == NULL)) return;
+
+    IvyEventKey event = {
+        .key = key,
+        .scancode = scancode,
+        .action = action,
+        .mods = mods
+    };
+
+    Ivy_Signal_Emit(&window->events.key, &event);
+}
+
 IvyStatus Ivy_Window_Init(IvyWindow *window, const char *title, int width, int height)
 {
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
@@ -42,9 +57,11 @@ IvyStatus Ivy_Window_Init(IvyWindow *window, const char *title, int width, int h
     window->height = height;
 
     Ivy_Signal_Init(&window->events.resize);
+    Ivy_Signal_Init(&window->events.key);
 
     glfwSetWindowUserPointer(glfwWindow, window);
     glfwSetFramebufferSizeCallback(glfwWindow, Ivy_GLFW_FramebufferSize_Callback);
+    glfwSetKeyCallback(glfwWindow, Ivy_GLFW_Key_Callback);
 
     Ivy_Window_SetVSync(window, 1);
 

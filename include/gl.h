@@ -13,6 +13,7 @@ extern "C" {
 typedef unsigned int GLbitfield;
 typedef float        GLclampf;
 typedef int          GLint;
+typedef unsigned int GLuint;
 typedef unsigned int GLenum;
 typedef int          GLsizei;
 
@@ -20,6 +21,9 @@ typedef int          GLsizei;
     X(void, glClear, GLbitfield mask) \
     X(void, glClearColor, GLclampf red, GLclampf green, GLclampf blue, GLclampf alpha) \
     X(void, glViewport, GLint x, GLint y, GLsizei width, GLsizei height) \
+    X(void, glGenFramebuffers, GLsizei n, GLuint *framebuffers) \
+    X(void, glDeleteFramebuffers, GLsizei n, const GLuint *framebuffers) \
+    X(void, glBindFramebuffer, GLenum target, GLuint framebuffer)
     // adjust as needed
 
 #define X(ret, name, ...) typedef ret (*PFN_##name)(__VA_ARGS__);

@@ -25,6 +25,10 @@ extern "C" {
 #define GLFW_STEREO                  0x00021011
 #define GLFW_REFRESH_RATE            0x00021012
 
+#define GLFW_RELEASE                0
+#define GLFW_PRESS                  1
+#define GLFW_KEY_SPACE              32
+
 typedef struct GLFWwindow  GLFWwindow;
 typedef struct GLFWmonitor GLFWmonitor;
 typedef void (*GLFWglproc)(void);

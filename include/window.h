@@ -4,10 +4,9 @@
 #include "fwd.h"
 #include "types.h"
 #include "glfw.h"
+#include "signal.h"
 
 #include <stdbool.h>
-
-#include "signal.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -22,6 +21,7 @@ struct IvyWindow
 
     struct {
         IvySignal resize;
+        IvySignal key;
     } events;
 };
 
