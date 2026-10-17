@@ -1,7 +1,8 @@
-#include "glfw.h"
-#include "window.h"
-#include "input.h"
-#include "events.h"
+#include "ivy/platform/input.h"
+#include "ivy/core/log.h"
+#include "ivy/platform/events.h"
+#include "ivy/platform/window.h"
+#include "ivy/platform/glfw_loader.h"
 
 #include <string.h>
 
@@ -62,6 +63,10 @@ static void IvyInput_HandleMouseButtonEvent(IvyListener *listener, void *data)
     IvyInput *input = IVY_CONTAINER_OF(listener, IvyInput, MouseButton.listener);
     const IvyEventMouseButton *event = data;
 
+    IVY_LOG_INFO("(IvyInput) Mouse Button: %d, Action: %s",
+        event->button,
+        (event->action == GLFW_PRESS) ? "PRESS" : "RELEASE");
+
     if (event->button >= 0 && event->button < IVY_MAX_MOUSE_BUTTONS)
     {
         if (event->action == GLFW_PRESS) input->MouseButton.current_buttons[event->button] = true;
@@ -78,6 +83,10 @@ static void IvyInput_HandleMouseMoveEvent(IvyListener *listener, void *data)
     input->MousePosition.delta_y = event->y - input->MousePosition.y;
     input->MousePosition.x = event->x;
     input->MousePosition.y = event->y;
+
+    IVY_LOG_INFO("(IvyInput) Mouse Moved: pos=(%.1f, %.1f), delta=(%.1f, %.1f)",
+        input->MousePosition.x, input->MousePosition.y,
+        input->MousePosition.delta_x, input->MousePosition.delta_y);
 }
 
 static void IvyInput_HandleMouseScrollEvent(IvyListener *listener, void *data)
@@ -87,4 +96,7 @@ static void IvyInput_HandleMouseScrollEvent(IvyListener *listener, void *data)
 
     input->MouseScroll.x = event->x_offset;
     input->MouseScroll.y = event->y_offset;
+
+    IVY_LOG_INFO("(IvyInput) Mouse Scroll: offset=(%.2f, %.2f)",
+        event->x_offset, event->y_offset);
 }

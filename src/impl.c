@@ -1,8 +1,8 @@
 #define IVY_LOG_IMPLEMENTATION
-#include "log.h"
+#include "ivy/core/log.h"
 
 #define IVY_GLFW_LOADER_IMPLEMENTATION
-#include "glfw.h"
+#include "ivy/platform/glfw_loader.h"
 
 #define IVY_GL_LOADER_IMPLEMENTATION
-#include "gl.h"
+#include "ivy/graphics/gl_loader.h"

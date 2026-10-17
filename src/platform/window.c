@@ -1,9 +1,9 @@
-#include "fwd.h"
-#include "glfw.h"
-#include "window.h"
-#include "signal.h"
-#include "events.h"
-#include "log.h"
+#include "ivy/platform/window.h"
+#include "ivy/core/fwd.h"
+#include "ivy/core/log.h"
+#include "ivy/core/signal.h"
+#include "ivy/platform/events.h"
+#include "ivy/platform/glfw_loader.h"
 
 static void Ivy_GLFW_FramebufferSize_Callback(GLFWwindow *glfwWindow, int width, int height);
 static void Ivy_GLFW_Key_Callback(GLFWwindow *glfwWindow, int key, int scancode, int action, int mods);

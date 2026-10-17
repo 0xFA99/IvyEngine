@@ -1,7 +1,7 @@
 #ifndef IVY_SIGNAL_H
 #define IVY_SIGNAL_H
 
-#include "types.h"
+#include "ivy/core/types.h"
 
 #include <stdbool.h>
 

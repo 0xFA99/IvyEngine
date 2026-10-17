@@ -1,9 +1,9 @@
 #ifndef IVY_INPUT_H
 #define IVY_INPUT_H
 
-#include "fwd.h"
-#include "types.h"
-#include "signal.h"
+#include "ivy/core/fwd.h"
+#include "ivy/core/signal.h"
+#include "ivy/core/types.h"
 
 #include <stdbool.h>
 

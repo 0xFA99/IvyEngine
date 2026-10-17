@@ -1,7 +1,7 @@
 #ifndef IVY_GL_LOADER_H
 #define IVY_GL_LOADER_H
 
-#include "types.h"
+#include "ivy/core/types.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -43,7 +43,8 @@ void Ivy_GL_Unload(void);
 
 #ifdef IVY_GL_LOADER_IMPLEMENTATION
 
-#include "glfw.h"
+#include "ivy/core/log.h"
+#include "ivy/platform/glfw_loader.h"
 
 #define X(ret, name, ...) PFN_##name name = NULL;
 IVY_GL_FUNCTIONS(X)

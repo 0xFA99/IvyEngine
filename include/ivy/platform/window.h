@@ -1,10 +1,10 @@
 #ifndef IVY_WINDOW_H
 #define IVY_WINDOW_H
 
-#include "fwd.h"
-#include "types.h"
-#include "glfw.h"
-#include "signal.h"
+#include "ivy/core/fwd.h"
+#include "ivy/core/signal.h"
+#include "ivy/core/types.h"
+#include "ivy/platform/glfw_loader.h"
 
 #include <stdbool.h>
 

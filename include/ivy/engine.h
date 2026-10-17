@@ -1,12 +1,13 @@
 #ifndef IVY_ENGINE_H
 #define IVY_ENGINE_H
 
-#include "fwd.h"
-#include "types.h"
-#include "window.h"
-#include "renderer.h"
-#include "input.h"
-#include "signal.h"
+#include "ivy/core/fwd.h"
+#include "ivy/core/types.h"
+#include "ivy/core/signal.h"
+#include "ivy/core/time.h"
+#include "ivy/platform/window.h"
+#include "ivy/platform/input.h"
+#include "ivy/graphics/renderer.h"
 
 #include <stdbool.h>
 
@@ -19,6 +20,7 @@ struct IvyEngine
     IvyWindow window;
     IvyRenderer renderer;
     IvyInput input;
+    IvyTime time;
 
     IvySignal event_signal;
 

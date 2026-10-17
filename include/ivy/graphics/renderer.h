@@ -1,8 +1,8 @@
 #ifndef IVY_RENDERER_H
 #define IVY_RENDERER_H
 
-#include "fwd.h"
-#include "signal.h"
+#include "ivy/core/fwd.h"
+#include "ivy/core/signal.h"
 
 #ifdef __cplusplus
 extern "C" {

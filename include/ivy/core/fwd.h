@@ -16,6 +16,8 @@ typedef struct IvyEventMouseButton IvyEventMouseButton;
 typedef struct IvyEventMouseMove IvyEventMouseMove;
 typedef struct IvyEventMouseScroll IvyEventMouseScroll;
 
+typedef struct IvyTime IvyTime;
+
 typedef struct IvyVirtualResolution IvyVirtualResolution;
 
 #ifdef __cplusplus

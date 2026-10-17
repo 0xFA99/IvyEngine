@@ -1,10 +1,13 @@
-#include "fwd.h"
-#include "types.h"
-#include "glfw.h"
-#include "gl.h"
-#include "engine.h"
-#include "window.h"
-#include "log.h"
+#include "ivy/engine.h"
+#include "ivy/core/fwd.h"
+#include "ivy/core/log.h"
+#include "ivy/core/types.h"
+#include "ivy/core/time.h"
+#include "ivy/graphics/gl_loader.h"
+#include "ivy/graphics/renderer.h"
+#include "ivy/platform/window.h"
+#include "ivy/platform/input.h"
+#include "ivy/platform/glfw_loader.h"
 
 IvyStatus Ivy_Engine_Init(IvyEngine *engine)
 {
@@ -43,6 +46,7 @@ IvyStatus Ivy_Engine_Init(IvyEngine *engine)
 
     Ivy_Renderer_Init(&engine->renderer, &engine->window);
     Ivy_Input_Init(&engine->input, &engine->window);
+    Ivy_Time_Init(&engine->time);
 
     Ivy_Signal_Init(&engine->event_signal);
 
@@ -64,6 +68,7 @@ void Ivy_Engine_Run(IvyEngine *engine)
 
     while (engine->is_running && !glfwWindowShouldClose(window))
     {
+        Ivy_Time_Update(&engine->time);
         Ivy_Input_Update(&engine->input);
 
         glfwPollEvents();

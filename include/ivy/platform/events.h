@@ -1,7 +1,7 @@
 #ifndef IVY_EVENTS_H
 #define IVY_EVENTS_H
 
-#include "fwd.h"
+#include "ivy/core/fwd.h"
 
 #ifdef __cplusplus
 extern "C" {

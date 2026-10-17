@@ -1,7 +1,7 @@
 #ifndef IVY_GLFW_LOADER_H
 #define IVY_GLFW_LOADER_H
 
-#include "types.h"
+#include "ivy/core/types.h"
 
 #include <stdbool.h>
 
@@ -60,7 +60,8 @@ typedef void (*GLFWscrollfun)(GLFWwindow *window, double xoffset, double yoffset
     X(GLFWkeyfun, glfwSetKeyCallback, GLFWwindow *window, GLFWkeyfun callback) \
     X(GLFWmousebuttonfun, glfwSetMouseButtonCallback, GLFWwindow *window, GLFWmousebuttonfun callback) \
     X(GLFWcursorposfun, glfwSetCursorPosCallback, GLFWwindow *window, GLFWcursorposfun callback) \
-    X(GLFWscrollfun, glfwSetScrollCallback, GLFWwindow *window, GLFWscrollfun callback)
+    X(GLFWscrollfun, glfwSetScrollCallback, GLFWwindow *window, GLFWscrollfun callback) \
+    X(double, glfwGetTime, void)
 
     // adjust as needed
 
@@ -80,6 +81,8 @@ void Ivy_GLFW_Unload(void);
 #endif
 
 #ifdef IVY_GLFW_LOADER_IMPLEMENTATION
+
+#include "ivy/core/log.h"
 
 #if defined(_WIN32)
     #ifndef _WIN32_WINNT

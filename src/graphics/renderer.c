@@ -1,11 +1,10 @@
-#include "fwd.h"
-#include "types.h"
-#include "renderer.h"
-
-#include "events.h"
-#include "gl.h"
-#include "log.h"
-#include "window.h"
+#include "ivy/graphics/renderer.h"
+#include "ivy/core/fwd.h"
+#include "ivy/core/types.h"
+#include "ivy/core/log.h"
+#include "ivy/graphics/gl_loader.h"
+#include "ivy/platform/events.h"
+#include "ivy/platform/window.h"
 
 static void IvyRenderer_HandleWindowResize(IvyListener *listener, void *data);
 
