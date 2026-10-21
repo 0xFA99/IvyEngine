@@ -66,6 +66,9 @@ void Ivy_Engine_Run(IvyEngine *engine)
 
     IVY_LOG_INFO("(IvyEngine) Starting main loop...");
 
+    char title_buffer[128];
+    int last_fps = -1;
+
     while (engine->is_running && !glfwWindowShouldClose(window))
     {
         Ivy_Time_Update(&engine->time);
@@ -74,17 +77,32 @@ void Ivy_Engine_Run(IvyEngine *engine)
         glfwPollEvents();
 
         // update
-        // test
-        if (Ivy_Input_IsKeyPressed(&engine->input, GLFW_KEY_SPACE)) {
-            IVY_LOG_INFO("(IvyInput) Key Space Pressed!");
+        // test input
+        {
+            // if (Ivy_Input_IsKeyPressed(&engine->input, GLFW_KEY_SPACE)) {
+            //     IVY_LOG_INFO("(IvyInput) Key Space Pressed!");
+            // }
+
+            // if (Ivy_Input_IsKeyDown(&engine->input, GLFW_KEY_SPACE)) {
+            //     IVY_LOG_INFO("(IvyInput) Key Space Down!");
+            // }
+
+            // if (Ivy_Input_IsKeyReleased(&engine->input, GLFW_KEY_SPACE)) {
+            //     IVY_LOG_INFO("(IvyInput) Key Space Released!");
+            // }
         }
 
-        if (Ivy_Input_IsKeyDown(&engine->input, GLFW_KEY_SPACE)) {
-            IVY_LOG_INFO("(IvyInput) Key Space Down!");
-        }
+        // test time
+        int current_fps = Ivy_Time_GetFPS(&engine->time);
+        float delta_time = Ivy_Time_GetDeltaTime(&engine->time);
 
-        if (Ivy_Input_IsKeyReleased(&engine->input, GLFW_KEY_SPACE)) {
-            IVY_LOG_INFO("(IvyInput) Key Space Released!");
+        if (current_fps != last_fps) {
+            snprintf(title_buffer, sizeof(title_buffer),
+                "IvyEngine | FPS: %d | dt: %.4f s (%.2f ms)",
+                current_fps, delta_time, delta_time * 1000.0f);
+
+            IVY_LOG_INFO("%s\n", title_buffer);
+            last_fps = current_fps;
         }
 
         // render
