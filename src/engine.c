@@ -50,6 +50,8 @@ IvyStatus Ivy_Engine_Init(IvyEngine *engine)
 
     Ivy_Signal_Init(&engine->event_signal);
 
+    Ivy_VirtualResolution_Init(&engine->virtual_res, 320, 180, IVY_SCALE_FIT, &engine->window);
+
     glfwSwapInterval(1);
 
     engine->is_running = true;
@@ -93,17 +95,25 @@ void Ivy_Engine_Run(IvyEngine *engine)
         }
 
         // test time
-        int current_fps = Ivy_Time_GetFPS(&engine->time);
-        float delta_time = Ivy_Time_GetDeltaTime(&engine->time);
+        // int current_fps = Ivy_Time_GetFPS(&engine->time);
+        // float delta_time = Ivy_Time_GetDeltaTime(&engine->time);
 
-        if (current_fps != last_fps) {
-            snprintf(title_buffer, sizeof(title_buffer),
-                "IvyEngine | FPS: %d | dt: %.4f s (%.2f ms)",
-                current_fps, delta_time, delta_time * 1000.0f);
+        // if (current_fps != last_fps) {
+        //     snprintf(title_buffer, sizeof(title_buffer),
+        //         "IvyEngine | FPS: %d | dt: %.4f s (%.2f ms)",
+        //         current_fps, delta_time, delta_time * 1000.0f);
 
-            IVY_LOG_INFO("%s\n", title_buffer);
-            last_fps = current_fps;
+        //     IVY_LOG_INFO("%s\n", title_buffer);
+        //     last_fps = current_fps;
+        // }
+
+        Ivy_VirtualResolution_Begin(&engine->virtual_res);
+        {
+            glClearColor(0.2f, 0.5f, 0.8f, 1.0f);
+            glClear(GL_COLOR_BUFFER_BIT);
         }
+
+        Ivy_VirtualResolution_End(&engine->virtual_res, engine->window.width, engine->window.height);
 
         // render
         glfwSwapBuffers(window);
@@ -125,6 +135,7 @@ void Ivy_Engine_Terminate(IvyEngine *engine)
 {
     IVY_ASSERT(engine, "(IvyEngine) is NULL!");
 
+    Ivy_VirtualResolution_Terminate(&engine->virtual_res);
     Ivy_Renderer_Terminated(&engine->renderer);
     Ivy_Window_Terminate(&engine->window);
     glfwTerminate();

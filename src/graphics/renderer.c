@@ -1,8 +1,9 @@
 #include "ivy/graphics/renderer.h"
 #include "ivy/core/fwd.h"
-#include "ivy/core/types.h"
 #include "ivy/core/log.h"
+#include "ivy/core/types.h"
 #include "ivy/graphics/gl_loader.h"
+#include "ivy/graphics/virtual_resolution.h"
 #include "ivy/platform/events.h"
 #include "ivy/platform/window.h"
 
@@ -32,9 +33,7 @@ static void IvyRenderer_HandleWindowResize(IvyListener *listener, void *data)
 {
     const IvyRenderer *renderer = IVY_CONTAINER_OF(listener, IvyRenderer, events.resize);
     const IvyEventWindowResize *event = data;
-    (void)renderer;
 
-    glViewport(0, 0, event->width, event->height);
 
     IVY_LOG_INFO("(IvyRenderer) Viewport updated to %dx%d", event->width, event->height);
 }

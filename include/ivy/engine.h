@@ -8,6 +8,7 @@
 #include "ivy/platform/window.h"
 #include "ivy/platform/input.h"
 #include "ivy/graphics/renderer.h"
+#include "ivy/graphics/virtual_resolution.h"
 
 #include <stdbool.h>
 
@@ -23,6 +24,8 @@ struct IvyEngine
     IvyTime time;
 
     IvySignal event_signal;
+
+    IvyVirtualResolution virtual_res;
 
     bool is_running;
 };

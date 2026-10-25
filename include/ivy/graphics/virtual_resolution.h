@@ -3,6 +3,7 @@
 
 #include "ivy/core/fwd.h"
 #include "ivy/core/types.h"
+#include "ivy/core/signal.h"
 #include "ivy/graphics/gl_loader.h"
 
 #ifdef __cplusplus
@@ -31,9 +32,14 @@ struct IvyVirtualResolution
     GLuint fbo;
     GLuint texture;
     GLuint depth;
+
+    IvyListener resize_listener;
 };
 
-IvyStatus Ivy_VirtualResolution_Init(IvyVirtualResolution *virtual);
+IvyStatus Ivy_VirtualResolution_Init(IvyVirtualResolution *virtual, int width, int height, IvyScaleMode mode, IvyWindow *window);
+void Ivy_VirtualResolution_Update(IvyVirtualResolution *virtual, int width, int height);
+void Ivy_VirtualResolution_Begin(const IvyVirtualResolution *virtual);
+void Ivy_VirtualResolution_End(const IvyVirtualResolution *virtual, int width, int height);
 void Ivy_VirtualResolution_Terminate(IvyVirtualResolution *virtual);
 
 #ifdef __cplusplus
