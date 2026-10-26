@@ -113,6 +113,21 @@ void Ivy_Engine_Run(IvyEngine *engine)
             glClear(GL_COLOR_BUFFER_BIT);
         }
 
+        double mouseScreenX = engine->input.MousePosition.x;
+        double mouseScreenY = engine->input.MousePosition.y;
+
+        float virtualMouseX, virtualMouseY;
+        bool inside = Ivy_VirtualResolution_ScreenToVirtual(
+            &engine->virtual_res,
+            engine->window.height,
+            mouseScreenX, mouseScreenY,
+            &virtualMouseX, &virtualMouseY);
+
+        if (inside) {
+            IVY_LOG_INFO("Mouse Virtual: (%.1f, %.1f) | Screen: (%.1f, %.1f)",
+                virtualMouseX, virtualMouseY, mouseScreenX, mouseScreenY);
+        }
+
         Ivy_VirtualResolution_End(&engine->virtual_res, engine->window.width, engine->window.height);
 
         // render

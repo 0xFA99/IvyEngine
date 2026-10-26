@@ -42,6 +42,8 @@ void Ivy_VirtualResolution_Begin(const IvyVirtualResolution *virtual);
 void Ivy_VirtualResolution_End(const IvyVirtualResolution *virtual, int width, int height);
 void Ivy_VirtualResolution_Terminate(IvyVirtualResolution *virtual);
 
+bool Ivy_VirtualResolution_ScreenToVirtual(const IvyVirtualResolution *virtual, int windowHeight, double screenX, double screenY, float *outVirtualX, float *outVirtualY);
+
 #ifdef __cplusplus
 }
 #endif

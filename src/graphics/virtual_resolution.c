@@ -132,3 +132,35 @@ static void IvyVirtualResolution_HandleResize(IvyListener *listener, void *data)
         virtual->viewport.width, virtual->viewport.height,
         virtual->viewport.x, virtual->viewport.y);
 }
+
+bool Ivy_VirtualResolution_ScreenToVirtual(const IvyVirtualResolution *virtual, int windowHeight, double screenX, double screenY, float *outVirtualX, float *outVirtualY)
+{
+    IVY_ASSERT(virtual != NULL, "(IvyVirtualResolution) is NULL");
+
+    const float vp_top = (float)(windowHeight - (virtual->viewport.y + virtual->viewport.height));
+    const float vp_left = (float)virtual->viewport.x;
+
+    const float localX = (float)screenX - vp_left;
+    const float localY = (float)screenY - vp_top;
+
+    float virtualX = localX / virtual->viewport.scale;
+    float virtualY = localY / virtual->viewport.scale;
+
+    bool isInside = true;
+    if (virtualX < 0.0f || virtualX > (float)virtual->width ||
+        virtualY < 0.0f || virtualY > (float)virtual->height)
+    {
+        isInside = false;
+    }
+
+    if (virtualX < 0.0f) virtualX = 0.0f;
+    if (virtualX > (float)virtual->width) virtualX = (float)virtual->width;
+
+    if (virtualX < 0.0f) virtualY = 0.0f;
+    if (virtualY > (float)virtual->height) virtualY = (float)virtual->height;
+
+    if (outVirtualX) *outVirtualX = virtualX;
+    if (outVirtualY) *outVirtualY = virtualY;
+
+    return isInside;
+}
